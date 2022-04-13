@@ -30,7 +30,7 @@ impl Check {
             .ok_or(ValidationError::EmptyContent)
     }
 
-    pub fn into_inner(self) -> String {
+    pub fn inner_value(&self) -> String {
         self.0.escape_default().to_string()
     }
 }
