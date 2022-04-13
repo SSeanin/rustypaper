@@ -1,6 +1,6 @@
 use crate::domain::validation::ValidationError;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Check(String);
 
 impl Check {
@@ -8,29 +8,29 @@ impl Check {
         Self(value.into().trim().to_owned())
     }
 
-    pub fn is_min_length(&self, min: usize) -> super::Result<&Self> {
+    pub fn is_min_length(&self, min: usize) -> super::Result<Self> {
         if self.0.len() < min {
             Err(ValidationError::MinLength { min, got: self.0.len() })
         } else {
-            Ok(self)
+            Ok(self.clone())
         }
     }
 
-    pub fn is_max_length(&self, max: usize) -> super::Result<&Self> {
+    pub fn is_max_length(&self, max: usize) -> super::Result<Self> {
         if self.0.len() > max {
             Err(ValidationError::MaxLength { max, got: self.0.len() })
         } else {
-            Ok(self)
+            Ok(self.clone())
         }
     }
 
-    pub fn is_not_empty(&self) -> super::Result<&Self> {
+    pub fn is_not_empty(&self) -> super::Result<Self> {
         (!self.0.is_empty())
-            .then(|| self)
+            .then(|| self.clone())
             .ok_or(ValidationError::EmptyContent)
     }
 
-    pub fn inner_value(&self) -> String {
+    pub fn into_inner(self) -> String {
         self.0.escape_default().to_string()
     }
 }

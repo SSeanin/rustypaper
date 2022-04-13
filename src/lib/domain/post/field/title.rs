@@ -12,7 +12,7 @@ impl Title {
             .is_min_length(2)?
             .is_max_length(256)?
             .is_not_empty()?
-            .inner_value();
+            .into_inner();
 
         Ok(Self(title))
     }
