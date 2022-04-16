@@ -20,6 +20,10 @@ impl Title {
     pub fn into_inner(self) -> String {
         self.0
     }
+
+    pub fn as_str(&self) -> &str {
+        self.0.as_str()
+    }
 }
 
 impl FromStr for Title {
