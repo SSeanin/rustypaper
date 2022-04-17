@@ -1,6 +1,6 @@
 use crate::domain::validation::ValidationError;
 
-pub mod id;
+pub mod post_id;
 pub mod title;
 pub mod content;
 pub mod shortcode;
