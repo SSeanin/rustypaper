@@ -1,25 +1,25 @@
 pub struct CreatePostDto {
-    pub(self) post_id: String,
-    pub(self) title: String,
-    pub(self) content: String,
-    pub(self) shortcode: String,
-    pub(self) is_published: String,
-    pub(self) created_at: String,
-    pub(self) updated_at: String,
+    pub(in crate::data) post_id: String,
+    pub(in crate::data) title: String,
+    pub(in crate::data) content: String,
+    pub(in crate::data) shortcode: String,
+    pub(in crate::data) is_published: String,
+    pub(in crate::data) created_at: String,
+    pub(in crate::data) updated_at: String,
 }
 
 pub struct GetPostDto {
-    pub(self) shortcode: String,
+    pub(in crate::data) shortcode: String,
 }
 
 pub struct UpdatePostDto {
-    pub(self) shortcode: String,
-    pub(self) title: String,
-    pub(self) content: String,
-    pub(self) is_published: String,
-    pub(self) updated_at: String,
+    pub(in crate::data) shortcode: String,
+    pub(in crate::data) title: String,
+    pub(in crate::data) content: String,
+    pub(in crate::data) is_published: String,
+    pub(in crate::data) updated_at: String,
 }
 
 pub struct DeletePostDto {
-    pub(self) shortcode: String,
+    pub(in crate::data) shortcode: String,
 }

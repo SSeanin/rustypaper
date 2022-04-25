@@ -1,0 +1,59 @@
+{
+  "db": "PostgreSQL",
+  "808825990f16bcaf8905f317060cab97eb456a5e2ff3d6e9e268fe9dc3af829b": {
+    "describe": {
+      "columns": [
+        {
+          "name": "post_id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "title",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "content",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "shortcode",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "is_published",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 5,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "\n            SELECT * FROM post WHERE shortcode = $1\n        "
+  }
+}
