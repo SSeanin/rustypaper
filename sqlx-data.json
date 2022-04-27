@@ -56,6 +56,22 @@
     },
     "query": "\n            SELECT * FROM post WHERE shortcode = $1\n        "
   },
+  "c3cbb61bf4371f04ad5821d76b6946be7a366a624f4409f5116450006900473f": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Text",
+          "Bool",
+          "Timestamptz",
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "\n            UPDATE post SET\n                title = $1,\n                content = $2,\n                is_published = $3,\n                updated_at = $4\n            WHERE shortcode = $5\n        "
+  },
   "c6db8b5f390813c584a4a247929824436045335820a058d9d31565aa637ca597": {
     "describe": {
       "columns": [],

@@ -1,14 +1,14 @@
 use crate::data::database::DatabasePool;
-use crate::data::id::Id;
-use crate::data::model::post::dto::{CreatePostDto, GetPostDto};
+use crate::data::model::post::dto::{CreatePostDto, GetPostDto, UpdatePostDto};
 use crate::data::model::Post;
+use crate::data::Id;
 use crate::data::Result;
 use crate::domain::datetime::AppDatetime;
 use sqlx::{query, query_as};
 
-pub async fn get_post<M>(get_post_dto: M, database_pool: &DatabasePool) -> Result<Post>
+pub async fn get_post<D>(get_post_dto: D, database_pool: &DatabasePool) -> Result<Post>
 where
-    M: Into<GetPostDto>,
+    D: Into<GetPostDto>,
 {
     let shortcode = get_post_dto.into().shortcode;
     Ok(query_as!(
@@ -22,9 +22,9 @@ where
     .await?)
 }
 
-pub async fn create_post<M>(create_post_dto: M, database_pool: &DatabasePool) -> Result<Post>
+pub async fn create_post<D>(create_post_dto: D, database_pool: &DatabasePool) -> Result<Post>
 where
-    M: Into<CreatePostDto>,
+    D: Into<CreatePostDto>,
 {
     let post = create_post_dto.into();
     let id = Id::new().into_inner();
@@ -49,6 +49,34 @@ where
         post.shortcode,
         post.is_published,
         updated_at
+    )
+    .execute(database_pool)
+    .await?;
+
+    get_post(post.shortcode, database_pool).await
+}
+
+pub async fn update_post<D>(update_post_dto: D, database_pool: &DatabasePool) -> Result<Post>
+where
+    D: Into<UpdatePostDto>,
+{
+    let post = update_post_dto.into();
+    let updated_at = AppDatetime::now().into_inner();
+
+    query!(
+        r#"
+            UPDATE post SET
+                title = $1,
+                content = $2,
+                is_published = $3,
+                updated_at = $4
+            WHERE shortcode = $5
+        "#,
+        post.title,
+        post.content,
+        post.is_published,
+        updated_at,
+        post.shortcode
     )
     .execute(database_pool)
     .await?;
