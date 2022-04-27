@@ -55,5 +55,22 @@
       }
     },
     "query": "\n            SELECT * FROM post WHERE shortcode = $1\n        "
+  },
+  "c6db8b5f390813c584a4a247929824436045335820a058d9d31565aa637ca597": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Varchar",
+          "Text",
+          "Bpchar",
+          "Bool",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO post (\n                post_id,\n                title,\n                content,\n                shortcode,\n                is_published,\n                updated_at\n            ) VALUES (\n                $1, $2, $3, $4, $5, $6\n            )\n        "
   }
 }
