@@ -1,7 +1,6 @@
 pub struct CreatePostDto {
     pub(in crate::data) title: String,
     pub(in crate::data) content: String,
-    pub(in crate::data) shortcode: String,
     pub(in crate::data) is_published: bool,
 }
 

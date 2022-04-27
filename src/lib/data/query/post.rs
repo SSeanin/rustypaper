@@ -4,6 +4,7 @@ use crate::data::model::Post;
 use crate::data::Id;
 use crate::data::Result;
 use crate::domain::datetime::AppDatetime;
+use crate::domain::post::field::Shortcode;
 use sqlx::{query, query_as};
 
 pub async fn get_post<D>(get_post_dto: D, database_pool: &DatabasePool) -> Result<Post>
@@ -28,6 +29,7 @@ where
 {
     let post = create_post_dto.into();
     let id = Id::new().into_inner();
+    let shortcode = Shortcode::default().into_inner();
     let updated_at = AppDatetime::now().into_inner();
 
     query!(
@@ -46,14 +48,14 @@ where
         id,
         post.title,
         post.content,
-        post.shortcode,
+        shortcode,
         post.is_published,
         updated_at
     )
     .execute(database_pool)
     .await?;
 
-    get_post(post.shortcode, database_pool).await
+    get_post(shortcode, database_pool).await
 }
 
 pub async fn update_post<D>(update_post_dto: D, database_pool: &DatabasePool) -> Result<Post>
