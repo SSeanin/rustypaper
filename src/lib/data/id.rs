@@ -1,7 +1,7 @@
+use derive_more::{Display, From};
+use serde::{Deserialize, Serialize};
 use std::str::FromStr;
-use serde::{Serialize, Deserialize};
 use uuid::Uuid;
-use derive_more::{From, Display};
 
 #[derive(Debug, thiserror::Error)]
 pub enum IdError {
@@ -19,6 +19,10 @@ impl Id {
 
     pub fn nil() -> Self {
         Uuid::nil().into()
+    }
+
+    pub fn into_inner(self) -> Uuid {
+        self.0
     }
 }
 

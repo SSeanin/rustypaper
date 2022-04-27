@@ -1,4 +1,4 @@
-use chrono::{DateTime, FixedOffset, ParseError, Utc};
+use chrono::{DateTime, ParseError, Utc};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
@@ -9,14 +9,14 @@ pub enum DatetimeError {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct AppDatetime(DateTime<FixedOffset>);
+pub struct AppDatetime(DateTime<Utc>);
 
 impl AppDatetime {
     pub fn now() -> Self {
-        Self(Utc::now().into())
+        Self(Utc::now())
     }
 
-    pub fn into_inner(self) -> DateTime<FixedOffset> {
+    pub fn into_inner(self) -> DateTime<Utc> {
         self.0
     }
 
@@ -36,7 +36,7 @@ impl FromStr for AppDatetime {
 
     fn from_str(datetime: &str) -> Result<Self, Self::Err> {
         datetime
-            .parse::<DateTime<FixedOffset>>()
+            .parse::<DateTime<Utc>>()
             .map(Self)
             .map_err(DatetimeError::Parse)
     }
