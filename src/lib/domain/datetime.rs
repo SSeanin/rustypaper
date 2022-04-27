@@ -1,38 +1,42 @@
+use chrono::{DateTime, FixedOffset, ParseError, Utc};
+use serde::{Deserialize, Serialize};
 use std::str::FromStr;
-use serde::{Serialize, Deserialize};
-use time::{OffsetDateTime, format_description, error::Parse};
 
 #[derive(Debug, thiserror::Error)]
 pub enum DatetimeError {
     #[error("datetime parse error: {0}")]
-    Parse(#[from] Parse),
+    Parse(#[from] ParseError),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Datetime(OffsetDateTime);
+pub struct AppDatetime(DateTime<FixedOffset>);
 
-impl Datetime {
-    pub fn into_inner(self) -> OffsetDateTime {
+impl AppDatetime {
+    pub fn now() -> Self {
+        Self(Utc::now().into())
+    }
+
+    pub fn into_inner(self) -> DateTime<FixedOffset> {
         self.0
     }
 
     pub fn timestamp(&self) -> i64 {
-        self.0.unix_timestamp()
+        self.0.timestamp()
     }
 }
 
-impl Default for Datetime {
+impl Default for AppDatetime {
     fn default() -> Self {
-        Self(OffsetDateTime::now_utc())
+        Self::now()
     }
 }
 
-impl FromStr for Datetime {
+impl FromStr for AppDatetime {
     type Err = DatetimeError;
 
     fn from_str(datetime: &str) -> Result<Self, Self::Err> {
-        let format = format_description::well_known::Rfc3339;
-        OffsetDateTime::parse(datetime, &format)
+        datetime
+            .parse::<DateTime<FixedOffset>>()
             .map(Self)
             .map_err(DatetimeError::Parse)
     }

@@ -21,6 +21,6 @@ thiserror = "1.0"
 rand = "0.8"
 uuid = { version = "0.8", features = ["v4", "serde"] }
 derive_more = "0.99"
-time = { version = "0.3", features = ["macros", "parsing", "serde"] }
-sqlx = { version = "0.5", features = ["postgres", "runtime-tokio-rustls", "uuid", "time", "macros", "offline"] }
+chrono = { version = "0.4", features = ["serde"] }
+sqlx = { version = "0.5", features = ["postgres", "runtime-tokio-rustls", "uuid", "chrono", "macros", "offline"] }
 tokio = "1.17"

@@ -1,12 +1,12 @@
-use serde::{Serialize, Deserialize};
+use crate::domain::datetime::AppDatetime;
 use derive_more::Constructor;
-use crate::domain::datetime::Datetime;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Constructor)]
-pub struct CreatedAt(Datetime);
+pub struct CreatedAt(AppDatetime);
 
 impl CreatedAt {
-    pub fn into_inner(self) -> Datetime {
+    pub fn into_inner(self) -> AppDatetime {
         self.0
     }
 }
