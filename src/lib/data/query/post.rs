@@ -1,5 +1,5 @@
 use crate::data::database::DatabasePool;
-use crate::data::model::post::dto::{CreatePostDto, GetPostDto, UpdatePostDto};
+use crate::data::model::post::dto::{CreatePostDto, DeletePostDto, GetPostDto, UpdatePostDto};
 use crate::data::model::Post;
 use crate::data::Id;
 use crate::data::Result;
@@ -82,4 +82,22 @@ where
     .await?;
 
     get_post(post.shortcode, database_pool).await
+}
+
+pub async fn delete_post<D>(delete_post_dto: D, database_pool: &DatabasePool) -> Result<()>
+where
+    D: Into<DeletePostDto>,
+{
+    let shortcode = delete_post_dto.into().shortcode;
+
+    query!(
+        r#"
+            DELETE FROM post WHERE shortcode = $1
+        "#,
+        shortcode
+    )
+    .execute(database_pool)
+    .await?;
+
+    Ok(())
 }
