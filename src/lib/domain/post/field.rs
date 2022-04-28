@@ -1,5 +1,3 @@
-use crate::domain::validation::ValidationError;
-
 pub mod content;
 pub mod created_at;
 pub mod is_published;

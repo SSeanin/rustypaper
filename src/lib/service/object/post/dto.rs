@@ -1,6 +1,5 @@
 use crate::domain::post::field::{Content, IsPublished, Shortcode, Title};
 use serde::{Deserialize, Serialize};
-use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreatePostObject {
