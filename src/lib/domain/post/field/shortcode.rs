@@ -1,8 +1,8 @@
-use std::str::FromStr;
-use rand::{thread_rng, Rng};
+use crate::domain::DomainError;
 use rand::distributions::Alphanumeric;
-use serde::{Serialize, Deserialize};
-use super::FieldError;
+use rand::{thread_rng, Rng};
+use serde::{Deserialize, Serialize};
+use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Shortcode(String);
@@ -34,7 +34,7 @@ impl Default for Shortcode {
 }
 
 impl FromStr for Shortcode {
-    type Err = FieldError;
+    type Err = DomainError;
 
     fn from_str(shortcode: &str) -> Result<Self, Self::Err> {
         Ok(Self(shortcode.into()))

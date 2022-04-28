@@ -1,6 +1,6 @@
+use crate::domain::DomainError;
+use serde::{Deserialize, Serialize};
 use std::str::FromStr;
-use serde::{Serialize, Deserialize};
-use super::FieldError;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct IsPublished(bool);
@@ -18,11 +18,11 @@ impl Default for IsPublished {
 }
 
 impl FromStr for IsPublished {
-    type Err = FieldError;
+    type Err = DomainError;
 
     fn from_str(boolean: &str) -> Result<Self, Self::Err> {
         str::parse::<bool>(boolean)
             .map(Self)
-            .map_err(FieldError::ParseBool)
+            .map_err(DomainError::ParseBool)
     }
 }

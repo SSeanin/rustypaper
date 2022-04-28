@@ -1,13 +1,16 @@
-use std::str::FromStr;
-use serde::{Serialize, Deserialize};
-use super::{FieldError, Result};
 use crate::domain::validation::string;
+use crate::domain::{DomainError, Result};
+use serde::{Deserialize, Serialize};
+use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Content(String);
 
 impl Content {
-    pub fn new<T>(content: T) -> Result<Self> where T: Into<String> {
+    pub fn new<T>(content: T) -> Result<Self>
+    where
+        T: Into<String>,
+    {
         let content = string::Check::new(content)
             .is_min_length(8)?
             .is_not_empty()?
@@ -26,7 +29,7 @@ impl Content {
 }
 
 impl FromStr for Content {
-    type Err = FieldError;
+    type Err = DomainError;
 
     fn from_str(content: &str) -> std::result::Result<Self, Self::Err> {
         Self::new(content)
