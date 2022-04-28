@@ -5,6 +5,8 @@ use sqlx::Error::RowNotFound;
 pub mod action;
 pub mod object;
 
+pub type Result<T> = std::result::Result<T, ServiceError>;
+
 #[derive(Debug, thiserror::Error)]
 pub enum ServiceError {
     #[error("domain error: {0}")]
