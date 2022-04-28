@@ -56,6 +56,18 @@
     },
     "query": "\n            SELECT * FROM post WHERE shortcode = $1\n        "
   },
+  "840503059b806d7331eedb68bf1a9463dced2c0ee530a8783f46cfb35a134da1": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Bpchar"
+        ]
+      }
+    },
+    "query": "\n            DELETE FROM post WHERE shortcode = $1\n        "
+  },
   "c3cbb61bf4371f04ad5821d76b6946be7a366a624f4409f5116450006900473f": {
     "describe": {
       "columns": [],

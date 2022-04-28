@@ -1,8 +1,9 @@
 use crate::domain::DomainError;
+use derive_more::From;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, From)]
 pub struct IsPublished(bool);
 
 impl IsPublished {

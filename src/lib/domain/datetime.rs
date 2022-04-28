@@ -1,4 +1,5 @@
 use chrono::{DateTime, ParseError, Utc};
+use derive_more::From;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
@@ -8,7 +9,7 @@ pub enum DatetimeError {
     Parse(#[from] ParseError),
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, From)]
 pub struct AppDatetime(DateTime<Utc>);
 
 impl AppDatetime {
