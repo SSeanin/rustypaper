@@ -4,6 +4,7 @@ pub mod datetime;
 pub mod post;
 pub mod validation;
 
+pub use datetime::AppDatetime;
 pub use post::Post;
 
 pub(self) type Result<T> = std::result::Result<T, DomainError>;
