@@ -1,7 +1,7 @@
 use crate::data::Id;
 use crate::domain::post::field::Shortcode;
 use crate::domain::AppDatetime;
-use crate::service::object::post::{CreatePostObject, GetPostObject};
+use crate::service::object::post::{CreatePostObject, GetPostObject, UpdatePostObject};
 use chrono::{DateTime, Utc};
 use uuid::Uuid;
 
@@ -50,6 +50,19 @@ pub struct UpdatePostDto {
     pub(in crate::data) title: String,
     pub(in crate::data) content: String,
     pub(in crate::data) is_published: bool,
+    pub(in crate::data) updated_at: DateTime<Utc>,
+}
+
+impl From<UpdatePostObject> for UpdatePostDto {
+    fn from(object: UpdatePostObject) -> Self {
+        Self {
+            shortcode: object.shortcode.into_inner(),
+            title: object.title.into_inner(),
+            content: object.content.into_inner(),
+            is_published: object.is_published.into_inner(),
+            updated_at: AppDatetime::now().into_inner(),
+        }
+    }
 }
 
 pub struct DeletePostDto {

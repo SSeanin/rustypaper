@@ -2,7 +2,6 @@ use crate::data::database::DatabasePool;
 use crate::data::model::post::dto::{CreatePostDto, DeletePostDto, GetPostDto, UpdatePostDto};
 use crate::data::model::Post;
 use crate::data::Result;
-use crate::domain::datetime::AppDatetime;
 use sqlx::{query, query_as};
 
 pub async fn get_post<D>(get_post_dto: D, database_pool: &DatabasePool) -> Result<Post>
@@ -58,7 +57,6 @@ where
     D: Into<UpdatePostDto>,
 {
     let post = update_post_dto.into();
-    let updated_at = AppDatetime::now().into_inner();
 
     query!(
         r#"
@@ -72,7 +70,7 @@ where
         post.title,
         post.content,
         post.is_published,
-        updated_at,
+        post.updated_at,
         post.shortcode
     )
     .execute(database_pool)
