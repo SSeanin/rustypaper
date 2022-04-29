@@ -29,7 +29,7 @@ impl TryFrom<Post> for domain::Post {
             title: Title::from_str(raw.title.as_str())?,
             content: Content::from_str(raw.content.as_str())?,
             shortcode: Shortcode::from_str(raw.shortcode.as_str())?,
-            is_published: raw.is_published.into(),
+            is_published: IsPublished::from(raw.is_published),
             created_at: CreatedAt::new(raw.created_at.into()),
             updated_at: UpdatedAt::new(raw.updated_at.into()),
         })
