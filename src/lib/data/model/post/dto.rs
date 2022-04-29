@@ -1,7 +1,7 @@
 use crate::data::Id;
 use crate::domain::post::field::Shortcode;
 use crate::domain::AppDatetime;
-use crate::service::object::post::CreatePostObject;
+use crate::service::object::post::{CreatePostObject, GetPostObject};
 use chrono::{DateTime, Utc};
 use uuid::Uuid;
 
@@ -34,6 +34,14 @@ pub struct GetPostDto {
 impl From<String> for GetPostDto {
     fn from(shortcode: String) -> Self {
         Self { shortcode }
+    }
+}
+
+impl From<GetPostObject> for GetPostDto {
+    fn from(object: GetPostObject) -> Self {
+        Self {
+            shortcode: object.shortcode.into_inner(),
+        }
     }
 }
 
