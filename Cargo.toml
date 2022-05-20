@@ -1,5 +1,5 @@
 [package]
-name = "rusty-paper"
+name = "rustypaper"
 authors = ["Saeed Andalib <saeedandalib5@gmail.com>"]
 description = "Personal blog backend."
 version = "0.0.0"
@@ -24,3 +24,4 @@ derive_more = "0.99"
 chrono = { version = "0.4", features = ["serde"] }
 sqlx = { version = "0.5", features = ["postgres", "runtime-tokio-rustls", "uuid", "chrono", "macros", "offline"] }
 tokio = "1.17"
+rocket = { version = "0.5.0-rc.1", features = ["json"] }
