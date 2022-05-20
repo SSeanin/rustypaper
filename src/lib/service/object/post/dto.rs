@@ -1,5 +1,7 @@
 use crate::domain::post::field::{Content, IsPublished, Shortcode, Title};
+use crate::service::ServiceError;
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreatePostObject {
@@ -11,6 +13,16 @@ pub struct CreatePostObject {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetPostObject {
     pub shortcode: Shortcode,
+}
+
+impl FromStr for GetPostObject {
+    type Err = ServiceError;
+
+    fn from_str(shortcode: &str) -> Result<Self, Self::Err> {
+        Ok(Self {
+            shortcode: shortcode.parse()?,
+        })
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
