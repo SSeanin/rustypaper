@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <targets>
+      <target name="WSL - Ubuntu" type="wsl" uuid="b396070a-a763-45ca-ae9a-7c09a97aebe9">
+        <config>
+          <option name="distributionMsId" value="Ubuntu" />
+          <option name="projectRootOnTarget" value="/mnt/c/Users/saeed/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/213.7172.20/jbr/bin&#10;/rustypaper" />
+        </config>
+        <ContributedStateBase type="RsLanguageRuntime">
+          <config>
+            <option name="cargoPath" value="/home/saeed/.cargo/bin/cargo" />
+            <option name="cargoVersion" value="1.60.0 (d1fd9fe 2022-03-01)" />
+            <option name="rustcPath" value="/home/saeed/.cargo/bin/rustc" />
+            <option name="rustcVersion" value="1.60.0 (7737e0b5c 2022-04-04)" />
+          </config>
+        </ContributedStateBase>
+      </target>
+    </targets>
+  </component>
+</project>
