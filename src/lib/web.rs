@@ -2,6 +2,7 @@ use crate::service::ServiceError;
 use rocket::serde::json::Json;
 use rocket::Responder;
 
+pub mod catcher;
 pub mod response;
 pub mod router;
 pub mod server;
