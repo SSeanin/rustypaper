@@ -6,8 +6,8 @@ pub struct RocketConfig {
     pub database: AppDatabase,
 }
 
-pub fn rocket(config: RocketConfig) -> Rocket<Build> {
+pub fn rocket(config: RocketConfig, api_version: &str) -> Rocket<Build> {
     Rocket::build()
         .manage::<AppDatabase>(config.database)
-        .mount("/api/v1/posts", post::routes())
+        .mount(format!("/api/v{}/posts", api_version), post::routes())
 }
