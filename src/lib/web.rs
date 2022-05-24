@@ -3,7 +3,7 @@ use rocket::serde::json::Json;
 use rocket::Responder;
 
 pub mod response;
-pub mod routes;
+pub mod router;
 pub mod server;
 
 pub use server::rocket;

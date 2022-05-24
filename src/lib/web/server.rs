@@ -1,5 +1,5 @@
 use crate::data::database::AppDatabase;
-use crate::web::routes::post;
+use crate::web::router::post;
 use rocket::{Build, Rocket};
 
 pub struct RocketConfig {
