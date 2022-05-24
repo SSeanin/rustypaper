@@ -6,6 +6,9 @@ pub mod response;
 pub mod routes;
 pub mod server;
 
+pub use server::rocket;
+pub use server::RocketConfig;
+
 pub type Result<T> = std::result::Result<T, ApiError>;
 
 #[derive(Debug, thiserror::Error, Responder)]
