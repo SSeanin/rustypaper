@@ -1,5 +1,5 @@
 use crate::service::ServiceError;
-use crate::web::response::FailResponse;
+use crate::web::response::{ErrorResponse, FailResponse};
 use rocket::serde::json::Json;
 use rocket::Responder;
 
@@ -20,7 +20,7 @@ pub enum ApiError {
     NotFound(Json<FailResponse<String>>),
     #[error("internal sever error")]
     #[response(status = 500, content_type = "json")]
-    Internal(Json<String>),
+    Internal(Json<ErrorResponse<String>>),
 }
 
 impl From<ServiceError> for ApiError {
@@ -29,9 +29,15 @@ impl From<ServiceError> for ApiError {
             ServiceError::NotFound => Self::NotFound(Json(FailResponse::new(
                 "requested entity was now found on this server".to_owned(),
             ))),
-            ServiceError::Data(..) => Self::Internal(Json("internal server error".to_owned())),
+            ServiceError::Data(..) => Self::Internal(Json(ErrorResponse::new(
+                "internal server error".to_owned(),
+                None,
+            ))),
             // todo handle domain error types here
-            ServiceError::Domain(..) => Self::Internal(Json("internal server error".to_owned())),
+            ServiceError::Domain(..) => Self::Internal(Json(ErrorResponse::new(
+                "internal server error".to_owned(),
+                None,
+            ))),
         }
     }
 }
