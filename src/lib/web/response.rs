@@ -70,7 +70,7 @@ impl<D> ErrorResponse<D>
 where
     D: Serialize,
 {
-    pub fn error(message: String, data: Option<D>) -> Self
+    pub fn new(message: String, data: Option<D>) -> Self
     where
         D: Serialize,
     {
