@@ -2,7 +2,7 @@ use crate::data::Id;
 use crate::domain::post::field::Shortcode;
 use crate::domain::AppDatetime;
 use crate::service::object::post::{
-    CreatePostObject, DeletePostObject, GetPostObject, UpdatePostObject,
+    CreatePostObject, DeletePostObject, GetAllPostsObject, GetPostObject, UpdatePostObject,
 };
 use chrono::{DateTime, Utc};
 use uuid::Uuid;
@@ -25,6 +25,20 @@ impl From<CreatePostObject> for CreatePostDto {
             shortcode: Shortcode::new().into_inner(),
             is_published: object.is_published.into_inner(),
             updated_at: AppDatetime::now().into_inner(),
+        }
+    }
+}
+
+pub struct GetAllPostsDto {
+    pub(in crate::data) skip: i64,
+    pub(in crate::data) limit: i64,
+}
+
+impl From<GetAllPostsObject> for GetAllPostsDto {
+    fn from(object: GetAllPostsObject) -> Self {
+        Self {
+            skip: object.skip.unwrap_or(0),
+            limit: object.limit.unwrap_or(50),
         }
     }
 }

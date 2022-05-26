@@ -1,8 +1,31 @@
 use crate::data::database::DatabasePool;
-use crate::data::model::post::dto::{CreatePostDto, DeletePostDto, GetPostDto, UpdatePostDto};
+use crate::data::model::post::dto::{
+    CreatePostDto, DeletePostDto, GetAllPostsDto, GetPostDto, UpdatePostDto,
+};
 use crate::data::model::Post;
 use crate::data::Result;
 use sqlx::{query, query_as};
+
+pub async fn get_all_posts<D>(
+    get_all_posts_dto: D,
+    database_pool: &DatabasePool,
+) -> Result<Vec<Post>>
+where
+    D: Into<GetAllPostsDto>,
+{
+    let get_all_posts_dto = get_all_posts_dto.into();
+
+    Ok(query_as!(
+        Post,
+        r#"
+            SELECT * FROM post LIMIT $1 OFFSET $2
+        "#,
+        get_all_posts_dto.limit,
+        get_all_posts_dto.skip
+    )
+    .fetch_all(database_pool)
+    .await?)
+}
 
 pub async fn get_post<D>(get_post_dto: D, database_pool: &DatabasePool) -> Result<Post>
 where
