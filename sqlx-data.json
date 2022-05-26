@@ -1,5 +1,62 @@
 {
   "db": "PostgreSQL",
+  "3c0f4b76c00701a52f8b802995770cc3daec482ad37dcd20635dd7c79c9244c6": {
+    "describe": {
+      "columns": [
+        {
+          "name": "post_id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "title",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "content",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "shortcode",
+          "ordinal": 3,
+          "type_info": "Bpchar"
+        },
+        {
+          "name": "is_published",
+          "ordinal": 4,
+          "type_info": "Bool"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 5,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 6,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n            SELECT * FROM post LIMIT $1 OFFSET $2\n        "
+  },
   "808825990f16bcaf8905f317060cab97eb456a5e2ff3d6e9e268fe9dc3af829b": {
     "describe": {
       "columns": [
