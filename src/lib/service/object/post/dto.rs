@@ -33,10 +33,10 @@ impl FromStr for GetPostObject {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UpdatePostObject {
-    pub title: Title,
-    pub content: Content,
+    pub title: Option<Title>,
+    pub content: Option<Content>,
     pub shortcode: Shortcode,
-    pub is_published: IsPublished,
+    pub is_published: Option<IsPublished>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

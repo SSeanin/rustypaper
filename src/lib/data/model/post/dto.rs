@@ -63,9 +63,9 @@ impl From<GetPostObject> for GetPostDto {
 
 pub struct UpdatePostDto {
     pub(in crate::data) shortcode: String,
-    pub(in crate::data) title: String,
-    pub(in crate::data) content: String,
-    pub(in crate::data) is_published: bool,
+    pub(in crate::data) title: Option<String>,
+    pub(in crate::data) content: Option<String>,
+    pub(in crate::data) is_published: Option<bool>,
     pub(in crate::data) updated_at: DateTime<Utc>,
 }
 
@@ -73,9 +73,11 @@ impl From<UpdatePostObject> for UpdatePostDto {
     fn from(object: UpdatePostObject) -> Self {
         Self {
             shortcode: object.shortcode.into_inner(),
-            title: object.title.into_inner(),
-            content: object.content.into_inner(),
-            is_published: object.is_published.into_inner(),
+            title: object.title.map(|title| title.into_inner()),
+            content: object.content.map(|content| content.into_inner()),
+            is_published: object
+                .is_published
+                .map(|is_published| is_published.into_inner()),
             updated_at: AppDatetime::now().into_inner(),
         }
     }

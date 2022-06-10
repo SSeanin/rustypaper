@@ -84,9 +84,9 @@ where
     query!(
         r#"
             UPDATE post SET
-                title = $1,
-                content = $2,
-                is_published = $3,
+                title = COALESCE($1, title),
+                content = COALESCE($2, content),
+                is_published = COALESCE($3, is_published),
                 updated_at = $4
             WHERE shortcode = $5
         "#,
