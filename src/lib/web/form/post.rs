@@ -25,10 +25,11 @@ impl TryFrom<CreatePostForm> for CreatePostObject {
 
 #[derive(Debug, Deserialize)]
 pub struct UpdatePostForm {
-    title: Option<String>,
-    content: Option<String>,
-    is_published: Option<bool>,
-    shortcode: String,
+    pub(in crate::web) title: Option<String>,
+    pub(in crate::web) content: Option<String>,
+    pub(in crate::web) is_published: Option<bool>,
+    #[serde(skip)]
+    pub(in crate::web) shortcode: Option<String>,
 }
 
 impl TryFrom<UpdatePostForm> for UpdatePostObject {
@@ -38,6 +39,7 @@ impl TryFrom<UpdatePostForm> for UpdatePostObject {
         Ok(Self {
             shortcode: form
                 .shortcode
+                .unwrap_or_default()
                 .parse::<Shortcode>()
                 .map_err(ServiceError::Domain)?,
             // todo rewrite idiomatic

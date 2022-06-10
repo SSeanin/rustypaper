@@ -39,13 +39,17 @@ async fn create_post(
     Ok(Json(SuccessResponse::new(post)))
 }
 
-// todo maybe get shortcode as url param
-#[rocket::patch("/", format = "json", data = "<form>")]
+#[rocket::patch("/<shortcode>", format = "json", data = "<form>")]
 async fn update_post(
+    shortcode: &str,
     form: Json<UpdatePostForm>,
     database: &State<AppDatabase>,
 ) -> Result<Json<SuccessResponse<Post>>> {
-    let object: UpdatePostObject = form.into_inner().try_into()?;
+    let form = UpdatePostForm {
+        shortcode: Some(shortcode.to_owned()),
+        ..form.into_inner()
+    };
+    let object: UpdatePostObject = form.try_into()?;
     let post = update_post_action(object, database.get_pool()).await?;
     Ok(Json(SuccessResponse::new(post)))
 }
