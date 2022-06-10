@@ -6,11 +6,14 @@ use crate::service::object::post::{
 };
 use crate::service::Result;
 
-pub async fn create_post_action(
-    create_post_object: CreatePostObject,
+pub async fn create_post_action<O>(
+    create_post_object: O,
     database_pool: &DatabasePool,
-) -> Result<Post> {
-    Ok(create_post(create_post_object, database_pool)
+) -> Result<Post>
+where
+    O: Into<CreatePostObject>,
+{
+    Ok(create_post(create_post_object.into(), database_pool)
         .await?
         .try_into()?)
 }

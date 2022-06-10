@@ -1,8 +1,9 @@
 use crate::data::database::AppDatabase;
 use crate::domain::Post;
-use crate::service::action::post::{get_all_posts_action, get_post_action};
-use crate::service::object::post::GetPostObject;
+use crate::service::action::post::{create_post_action, get_all_posts_action, get_post_action};
+use crate::service::object::post::{CreatePostObject, GetPostObject};
 use crate::web::form::pagination::PaginationForm;
+use crate::web::form::post::CreatePostForm;
 use crate::web::response::SuccessResponse;
 use crate::web::Result;
 use rocket::serde::json::Json;
@@ -26,6 +27,16 @@ async fn get_post(
     Ok(Json(SuccessResponse::new(post)))
 }
 
+#[rocket::post("/", format = "json", data = "<form>")]
+async fn create_post(
+    form: Json<CreatePostForm>,
+    database: &State<AppDatabase>,
+) -> Result<Json<SuccessResponse<Post>>> {
+    let form: CreatePostObject = form.into_inner().try_into()?;
+    let post = create_post_action(form, database.get_pool()).await?;
+    Ok(Json(SuccessResponse::new(post)))
+}
+
 pub fn routes() -> Vec<Route> {
-    routes!(get_all_posts, get_post)
+    routes!(get_all_posts, get_post, create_post)
 }

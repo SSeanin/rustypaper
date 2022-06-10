@@ -4,13 +4,19 @@ use crate::domain::validation::ValidationError;
 pub struct Check(String);
 
 impl Check {
-    pub fn new<T>(value: T) -> Self where T: Into<String> {
+    pub fn new<T>(value: T) -> Self
+    where
+        T: Into<String>,
+    {
         Self(value.into().trim().to_owned())
     }
 
     pub fn is_min_length(&self, min: usize) -> super::Result<Self> {
         if self.0.len() < min {
-            Err(ValidationError::MinLength { min, got: self.0.len() })
+            Err(ValidationError::MinLength {
+                min,
+                got: self.0.len(),
+            })
         } else {
             Ok(self.clone())
         }
@@ -18,7 +24,10 @@ impl Check {
 
     pub fn is_max_length(&self, max: usize) -> super::Result<Self> {
         if self.0.len() > max {
-            Err(ValidationError::MaxLength { max, got: self.0.len() })
+            Err(ValidationError::MaxLength {
+                max,
+                got: self.0.len(),
+            })
         } else {
             Ok(self.clone())
         }
@@ -31,7 +40,7 @@ impl Check {
     }
 
     pub fn into_inner(self) -> String {
-        self.0.escape_default().to_string()
+        self.0
     }
 }
 
@@ -48,7 +57,10 @@ mod tests {
         assert!(ok.is_ok());
 
         assert!(err.is_err());
-        assert_eq!(err.unwrap_err(), ValidationError::MinLength { min: 30, got: 25 });
+        assert_eq!(
+            err.unwrap_err(),
+            ValidationError::MinLength { min: 30, got: 25 }
+        );
     }
 
     #[test]
@@ -60,7 +72,10 @@ mod tests {
         assert!(ok.is_ok());
 
         assert!(err.is_err());
-        assert_eq!(err.unwrap_err(), ValidationError::MaxLength { max: 20, got: 25 });
+        assert_eq!(
+            err.unwrap_err(),
+            ValidationError::MaxLength { max: 20, got: 25 }
+        );
     }
 
     #[test]
@@ -78,10 +93,10 @@ mod tests {
     }
 
     #[test]
-    fn escape_unicode_values() {
+    fn emoji_and_unicode() {
         let check = Check::new("🥰❤\t\n test");
         let value = check.into_inner();
 
-        assert_eq!(value, r#"\u{1f970}\u{2764}\t\n test"#)
+        assert_eq!(value, "🥰❤\t\n test")
     }
 }

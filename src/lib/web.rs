@@ -35,9 +35,9 @@ impl From<ServiceError> for ApiError {
                 None,
             ))),
             // todo handle domain error types here
-            ServiceError::Domain(..) => Self::Internal(Json(ErrorResponse::new(
-                "internal server error".to_owned(),
-                None,
+            ServiceError::Domain(e) => Self::Internal(Json(ErrorResponse::new(
+                "internal server domain error".to_owned(),
+                Some(e.to_string()),
             ))),
         }
     }
