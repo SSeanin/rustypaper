@@ -47,12 +47,12 @@ async fn create_post(
 
 #[rocket::patch("/<shortcode>", format = "json", data = "<form>")]
 async fn update_post(
-    shortcode: &str,
+    shortcode: Shortcode,
     form: Json<UpdatePostForm>,
     database: &State<AppDatabase>,
 ) -> Result<Json<SuccessResponse<Post>>> {
     let form = UpdatePostForm {
-        shortcode: Some(shortcode.to_owned()),
+        shortcode: Some(shortcode.into_inner()),
         ..form.into_inner()
     };
     let object: UpdatePostObject = form.try_into()?;
