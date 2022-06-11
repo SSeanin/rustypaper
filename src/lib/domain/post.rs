@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Post {
+    #[serde(skip)]
     pub post_id: PostId,
     pub title: Title,
     pub content: Content,
