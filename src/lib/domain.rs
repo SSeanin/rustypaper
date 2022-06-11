@@ -2,6 +2,8 @@ use validation::ValidationError;
 
 pub mod datetime;
 pub mod post;
+pub mod timestamp;
+pub mod user;
 pub mod validation;
 
 pub use datetime::AppDatetime;
