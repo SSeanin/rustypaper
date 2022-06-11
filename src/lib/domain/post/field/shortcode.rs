@@ -1,10 +1,13 @@
 use crate::domain::DomainError;
+use derive_more::From;
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
+use rocket::request::FromParam;
+use rocket::{UriDisplayPath, UriDisplayQuery};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, UriDisplayPath, UriDisplayQuery, From)]
 pub struct Shortcode(String);
 
 impl Shortcode {
@@ -33,10 +36,24 @@ impl Default for Shortcode {
     }
 }
 
+impl From<&str> for Shortcode {
+    fn from(shortcode: &str) -> Self {
+        Self(shortcode.to_owned())
+    }
+}
+
 impl FromStr for Shortcode {
     type Err = DomainError;
 
     fn from_str(shortcode: &str) -> Result<Self, Self::Err> {
         Ok(Self(shortcode.into()))
+    }
+}
+
+impl<'r> FromParam<'r> for Shortcode {
+    type Error = &'r str;
+
+    fn from_param(param: &'r str) -> Result<Self, Self::Error> {
+        Ok(Self::from(param))
     }
 }

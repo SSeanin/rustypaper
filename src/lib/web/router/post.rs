@@ -1,15 +1,18 @@
 use crate::data::database::AppDatabase;
+use crate::domain::post::field::Shortcode;
 use crate::domain::Post;
 use crate::service::action::post::{
-    create_post_action, get_all_posts_action, get_post_action, update_post_action,
+    create_post_action, delete_post_action, get_all_posts_action, get_post_action,
+    update_post_action,
 };
-use crate::service::object::post::{CreatePostObject, GetPostObject, UpdatePostObject};
+use crate::service::object::post::{CreatePostObject, UpdatePostObject};
 use crate::web::form::pagination::PaginationForm;
 use crate::web::form::post::{CreatePostForm, UpdatePostForm};
 use crate::web::response::SuccessResponse;
 use crate::web::Result;
+use rocket::response::status;
 use rocket::serde::json::Json;
-use rocket::{routes, Route, State};
+use rocket::{routes, uri, Route, State};
 
 #[rocket::get("/?<pagination>")]
 async fn get_all_posts(
@@ -22,10 +25,10 @@ async fn get_all_posts(
 
 #[rocket::get("/<shortcode>")]
 async fn get_post(
-    shortcode: &str,
+    shortcode: Shortcode,
     database: &State<AppDatabase>,
 ) -> Result<Json<SuccessResponse<Post>>> {
-    let post = get_post_action(shortcode.parse::<GetPostObject>()?, database.get_pool()).await?;
+    let post = get_post_action(shortcode.into_inner().as_str(), database.get_pool()).await?;
     Ok(Json(SuccessResponse::new(post)))
 }
 
@@ -33,10 +36,13 @@ async fn get_post(
 async fn create_post(
     form: Json<CreatePostForm>,
     database: &State<AppDatabase>,
-) -> Result<Json<SuccessResponse<Post>>> {
+) -> Result<status::Created<Json<SuccessResponse<Post>>>> {
     let object: CreatePostObject = form.into_inner().try_into()?;
     let post = create_post_action(object, database.get_pool()).await?;
-    Ok(Json(SuccessResponse::new(post)))
+    Ok(
+        status::Created::new(uri!(get_post(&post.shortcode)).to_string())
+            .body(Json(SuccessResponse::new(post))),
+    )
 }
 
 #[rocket::patch("/<shortcode>", format = "json", data = "<form>")]
@@ -54,6 +60,18 @@ async fn update_post(
     Ok(Json(SuccessResponse::new(post)))
 }
 
+#[rocket::delete("/<shortcode>")]
+async fn delete_post(shortcode: &str, database: &State<AppDatabase>) -> Result<status::NoContent> {
+    let _ = delete_post_action(shortcode, database.get_pool()).await?;
+    Ok(status::NoContent)
+}
+
 pub fn routes() -> Vec<Route> {
-    routes!(get_all_posts, get_post, create_post, update_post)
+    routes!(
+        get_all_posts,
+        get_post,
+        create_post,
+        update_post,
+        delete_post
+    )
 }
