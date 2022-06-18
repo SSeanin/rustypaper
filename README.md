@@ -5,3 +5,7 @@
 <p align="center">
     A simple web API for creating and sharing text content
 </p>
+
+---
+
+Hooray!💥🎊 This repo is now public. Of course a more informative README.md will be comming soon😊 For now feel free to take a look around!
