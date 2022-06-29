@@ -1,6 +1,6 @@
-use crate::domain::validation::string;
 use crate::domain::{DomainError, Result};
 use serde::{Deserialize, Serialize};
+use std::borrow::Cow;
 use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -11,12 +11,17 @@ impl Content {
     where
         T: Into<String>,
     {
-        let content = string::Check::new(content)
-            .is_min_length(8)?
-            .is_not_empty()?
-            .into_inner();
+        let content = content.into();
 
-        Ok(Self(content))
+        match validator::validate_length(&content, Some(8), None, None) {
+            true => Ok(Self(content)),
+            false => {
+                let mut error = validator::ValidationError::new("length");
+                error.message = Some(Cow::from("Content length must be longer than 8 characters"));
+                error.add_param(Cow::from("content"), &content);
+                Err(error)?
+            }
+        }
     }
 
     pub fn into_inner(self) -> String {

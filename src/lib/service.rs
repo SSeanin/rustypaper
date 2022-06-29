@@ -15,6 +15,8 @@ pub enum ServiceError {
     Data(DataError),
     #[error("not found")]
     NotFound,
+    #[error("validation error: {0}")]
+    Validation(validator::ValidationErrors),
 }
 
 impl From<DataError> for ServiceError {

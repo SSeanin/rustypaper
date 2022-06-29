@@ -2,6 +2,7 @@ use crate::service::ServiceError;
 use crate::web::response::{ErrorResponse, FailResponse};
 use rocket::serde::json::Json;
 use rocket::Responder;
+use validator::ValidationErrors;
 
 pub mod catcher;
 pub mod form;
@@ -22,6 +23,9 @@ pub enum ApiError {
     #[error("internal sever error")]
     #[response(status = 500, content_type = "json")]
     Internal(Json<ErrorResponse<String>>),
+    #[error("validation error")]
+    #[response(status = 400, content_type = "json")]
+    Validation(Json<FailResponse<ValidationErrors>>),
 }
 
 impl From<ServiceError> for ApiError {
@@ -30,14 +34,12 @@ impl From<ServiceError> for ApiError {
             ServiceError::NotFound => Self::NotFound(Json(FailResponse::new(
                 "requested entity was now found on this server".to_owned(),
             ))),
-            ServiceError::Data(..) => Self::Internal(Json(ErrorResponse::new(
+            ServiceError::Validation(validation_errors) => {
+                Self::Validation(Json(FailResponse::new(validation_errors)))
+            }
+            _ => Self::Internal(Json(ErrorResponse::new(
                 "internal server error".to_owned(),
                 None,
-            ))),
-            // todo handle domain error types here
-            ServiceError::Domain(e) => Self::Internal(Json(ErrorResponse::new(
-                "internal server domain error".to_owned(),
-                Some(e.to_string()),
             ))),
         }
     }

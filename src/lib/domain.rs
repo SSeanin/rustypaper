@@ -1,4 +1,4 @@
-use validation::ValidationError;
+use validator::ValidationError;
 
 pub mod datetime;
 pub mod post;

@@ -1,6 +1,6 @@
-use crate::domain::validation::string;
 use crate::domain::{DomainError, Result};
 use serde::{Deserialize, Serialize};
+use std::borrow::Cow;
 use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -11,13 +11,18 @@ impl Title {
     where
         T: Into<String>,
     {
-        let title = string::Check::new(title)
-            .is_min_length(2)?
-            .is_max_length(256)?
-            .is_not_empty()?
-            .into_inner();
-
-        Ok(Self(title))
+        let title = title.into();
+        match validator::validate_length(&title, Some(2), Some(512), None) {
+            true => Ok(Self(title)),
+            false => {
+                let mut error = validator::ValidationError::new("length");
+                error.message = Some(Cow::from(
+                    "Title length must be between 2 and 512 characters",
+                ));
+                error.add_param(Cow::from("title"), &title);
+                Err(error)?
+            }
+        }
     }
 
     pub fn into_inner(self) -> String {

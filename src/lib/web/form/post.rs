@@ -1,7 +1,7 @@
 use crate::domain::post::field::{Content, IsPublished, Shortcode, Title};
+use crate::domain::DomainError;
 use crate::service::object::post::{CreatePostObject, UpdatePostObject};
 use crate::service::ServiceError;
-use crate::web::ApiError;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -12,14 +12,30 @@ pub struct CreatePostForm {
 }
 
 impl TryFrom<CreatePostForm> for CreatePostObject {
-    type Error = ApiError;
+    type Error = ServiceError;
 
     fn try_from(form: CreatePostForm) -> Result<Self, Self::Error> {
-        Ok(Self {
-            title: Title::new(form.title).map_err(ServiceError::Domain)?,
-            content: Content::new(form.content).map_err(ServiceError::Domain)?,
-            is_published: IsPublished::from(form.is_published),
-        })
+        let mut validation_errors = validator::ValidationErrors::new();
+
+        let title = Title::new(form.title);
+        let content = Content::new(form.content);
+
+        if let Err(DomainError::Validation(validation_error)) = &title {
+            validation_errors.add("title", validation_error.clone());
+        }
+        if let Err(DomainError::Validation(validation_error)) = &content {
+            validation_errors.add("content", validation_error.clone());
+        }
+
+        if validation_errors.is_empty() {
+            Ok(Self {
+                title: title.expect("failed to parse title"),
+                content: content.expect("failed to parse content"),
+                is_published: IsPublished::from(form.is_published),
+            })
+        } else {
+            Err(ServiceError::Validation(validation_errors))
+        }
     }
 }
 
@@ -33,31 +49,35 @@ pub struct UpdatePostForm {
 }
 
 impl TryFrom<UpdatePostForm> for UpdatePostObject {
-    type Error = ApiError;
+    type Error = ServiceError;
 
     fn try_from(form: UpdatePostForm) -> Result<Self, Self::Error> {
-        Ok(Self {
-            shortcode: form
-                .shortcode
-                .unwrap_or_default()
-                .parse::<Shortcode>()
-                .map_err(ServiceError::Domain)?,
-            // todo rewrite idiomatic
-            title: if let Some(title) = form.title {
-                let title = Title::new(title).map_err(ServiceError::Domain)?;
-                Some(title)
-            } else {
-                None
-            },
+        let mut validation_errors = validator::ValidationErrors::new();
 
-            content: if let Some(content) = form.content {
-                let content = Content::new(content).map_err(ServiceError::Domain)?;
-                Some(content)
-            } else {
-                None
-            },
+        let title = form.title.map(Title::new);
+        let content = form.content.map(Content::new);
 
-            is_published: form.is_published.map(IsPublished::from),
-        })
+        if let Some(Err(DomainError::Validation(validation_error))) = &title {
+            validation_errors.add("title", validation_error.clone());
+        }
+
+        if let Some(Err(DomainError::Validation(validation_error))) = &content {
+            validation_errors.add("content", validation_error.clone());
+        }
+
+        if validation_errors.is_empty() {
+            Ok(Self {
+                shortcode: form
+                    .shortcode
+                    .unwrap_or_default()
+                    .parse::<Shortcode>()
+                    .map_err(ServiceError::Domain)?,
+                title: title.map(|title| title.expect("failed to parse title")),
+                content: content.map(|content| content.expect("failed to parse content")),
+                is_published: form.is_published.map(IsPublished::from),
+            })
+        } else {
+            Err(ServiceError::Validation(validation_errors))
+        }
     }
 }
