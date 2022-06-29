@@ -10,3 +10,9 @@ impl UserId {
         self.0
     }
 }
+
+impl Default for UserId {
+    fn default() -> Self {
+        Self(Id::nil())
+    }
+}
