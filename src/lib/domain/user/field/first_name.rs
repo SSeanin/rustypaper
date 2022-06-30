@@ -1,6 +1,7 @@
-use crate::domain::Result;
+use crate::domain::{DomainError, Result};
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
+use std::str::FromStr;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct FirstName(String);
@@ -22,5 +23,13 @@ impl FirstName {
 
     pub fn into_inner(self) -> String {
         self.0
+    }
+}
+
+impl FromStr for FirstName {
+    type Err = DomainError;
+
+    fn from_str(first_name: &str) -> std::result::Result<Self, Self::Err> {
+        Self::new(first_name.to_owned())
     }
 }
