@@ -4,6 +4,8 @@ pub mod last_name;
 pub mod password;
 pub mod user_id;
 
+pub use crate::domain::timestamp::CreatedAt;
+pub use crate::domain::timestamp::UpdatedAt;
 pub use email::Email;
 pub use first_name::FirstName;
 pub use last_name::LastName;
