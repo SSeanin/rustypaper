@@ -1,6 +1,6 @@
 use crate::domain::Result;
 use argon2::password_hash::{rand_core::OsRng, SaltString};
-use argon2::{Argon2, PasswordHasher};
+use argon2::{Argon2, PasswordHash, PasswordHasher, PasswordVerifier};
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 
@@ -25,6 +25,11 @@ impl Password {
         Ok(Argon2::default()
             .hash_password(self.0.as_bytes(), &salt)?
             .to_string())
+    }
+
+    pub fn verify(password: &str, hash: &str) -> Result<()> {
+        let parsed_hash = PasswordHash::new(hash)?;
+        Ok(Argon2::default().verify_password(password.as_bytes(), &parsed_hash)?)
     }
 
     pub fn into_inner(self) -> String {
