@@ -10,6 +10,7 @@ pub struct User {
     pub email: Email,
     pub first_name: FirstName,
     pub last_name: LastName,
+    #[serde(skip)]
     pub password: Password,
     pub created_at: CreatedAt,
     pub updated_at: UpdatedAt,

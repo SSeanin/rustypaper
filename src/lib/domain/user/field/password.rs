@@ -36,3 +36,9 @@ impl Password {
         self.0
     }
 }
+
+impl Default for Password {
+    fn default() -> Self {
+        Self("".to_owned())
+    }
+}
