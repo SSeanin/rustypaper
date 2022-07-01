@@ -1,5 +1,6 @@
 use crate::data::database::AppDatabase;
 use crate::web::catcher::api;
+use crate::web::router::auth;
 use crate::web::router::post;
 use rocket::{Build, Rocket};
 
@@ -15,5 +16,6 @@ pub fn rocket(config: RocketConfig) -> Rocket<Build> {
             format!("/api/v{}/posts", config.api_version),
             post::routes(),
         )
+        .mount(format!("/api/v{}/auth", config.api_version), auth::routes())
         .register(format!("/api/v{}", config.api_version), api::catchers())
 }
