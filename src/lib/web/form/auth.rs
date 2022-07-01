@@ -5,17 +5,17 @@ use crate::service::ServiceError;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub struct CreateUserForm {
+pub struct SignupForm {
     first_name: String,
     last_name: String,
     email: String,
     password: String,
 }
 
-impl TryFrom<CreateUserForm> for CreateUserObject {
+impl TryFrom<SignupForm> for CreateUserObject {
     type Error = ServiceError;
 
-    fn try_from(form: CreateUserForm) -> Result<Self, Self::Error> {
+    fn try_from(form: SignupForm) -> Result<Self, Self::Error> {
         let mut validation_errors = validator::ValidationErrors::new();
 
         let first_name = FirstName::new(form.first_name);
