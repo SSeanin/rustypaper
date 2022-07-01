@@ -1,4 +1,4 @@
-use field::{Email, FirstName, LastName, Password, UserId};
+use field::{CreatedAt, Email, FirstName, LastName, Password, UpdatedAt, UserId};
 use serde::{Deserialize, Serialize};
 
 pub mod field;
@@ -11,4 +11,6 @@ pub struct User {
     pub first_name: FirstName,
     pub last_name: LastName,
     pub password: Password,
+    pub created_at: CreatedAt,
+    pub updated_at: UpdatedAt,
 }

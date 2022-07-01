@@ -1,7 +1,9 @@
 pub mod dto;
 
 use crate::data::Id;
-use crate::domain::user::field::{Email, FirstName, LastName, Password, UserId};
+use crate::domain::user::field::{
+    CreatedAt, Email, FirstName, LastName, Password, UpdatedAt, UserId,
+};
 use crate::domain::DomainError;
 use sqlx::types::{chrono::DateTime, chrono::Utc, Uuid};
 
@@ -27,6 +29,8 @@ impl TryFrom<User> for crate::domain::User {
             first_name: FirstName::from_str(raw.first_name.as_str())?,
             last_name: LastName::from_str(raw.last_name.as_str())?,
             password: Password::from(raw.password),
+            created_at: CreatedAt::new(raw.created_at.into()),
+            updated_at: UpdatedAt::new(raw.updated_at.into()),
         })
     }
 }

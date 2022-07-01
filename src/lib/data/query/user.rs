@@ -13,7 +13,7 @@ where
     Ok(query_as!(
         User,
         r#"
-            SELECT * FROM user WHERE email = $1
+            SELECT * FROM "user" WHERE email = $1
         "#,
         email
     )
@@ -29,7 +29,7 @@ where
 
     query!(
         r#"
-            INSERT INTO user (
+            INSERT INTO "user" (
                 user_id,
                 first_name,
                 last_name,
@@ -61,7 +61,7 @@ where
 
     query!(
         r#"
-            UPDATE user SET
+            UPDATE "user" SET
                 first_name = COALESCE($1, first_name),
                 last_name = COALESCE($2, last_name),
                 password = COALESCE($3, password),
