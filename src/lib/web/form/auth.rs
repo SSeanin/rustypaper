@@ -1,9 +1,9 @@
 use crate::domain::user::field::{Email, FirstName, LastName, Password};
-use crate::domain::{DomainError, TokenPair};
+use crate::domain::DomainError;
 use crate::service::object::auth::LoginObject;
 use crate::service::object::user::CreateUserObject;
 use crate::service::ServiceError;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct SignupForm {

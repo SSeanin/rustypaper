@@ -18,15 +18,19 @@ pub enum DomainError {
     Validation(#[from] validator::ValidationError),
     #[error("invalid boolean value: {0}")]
     ParseBool(#[from] std::str::ParseBoolError),
-    #[error("password hashing failed: {0}")]
+    #[error("generic password error: {0}")]
     Password(argon2::password_hash::Error),
     #[error("token error: {0}")]
     Token(#[from] jsonwebtoken::errors::Error),
+    #[error("invalid password")]
+    InvalidPassword,
 }
 
 impl From<argon2::password_hash::Error> for DomainError {
     fn from(password_hash_error: argon2::password_hash::Error) -> Self {
-        // todo match for password errors
-        Self::Password(password_hash_error)
+        match password_hash_error {
+            argon2::password_hash::Error::Password => Self::InvalidPassword,
+            _ => Self::Password(password_hash_error),
+        }
     }
 }
