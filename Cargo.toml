@@ -30,3 +30,4 @@ envy = "0.4.2"
 validator = { version = "0.15", features = ["derive"] }
 argon2 = "0.4"
 rand_core = { version = "0.6", features = ["std"] }
+jsonwebtoken = "8"

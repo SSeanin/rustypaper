@@ -1,8 +1,9 @@
 use crate::domain::user::field::{Email, FirstName, LastName, Password};
-use crate::domain::DomainError;
+use crate::domain::{DomainError, TokenPair};
+use crate::service::object::auth::LoginObject;
 use crate::service::object::user::CreateUserObject;
 use crate::service::ServiceError;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]
 pub struct SignupForm {
@@ -45,6 +46,21 @@ impl TryFrom<SignupForm> for CreateUserObject {
             })
         } else {
             Err(ServiceError::Validation(validation_errors))
+        }
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct LoginForm {
+    email: String,
+    password: String,
+}
+
+impl From<LoginForm> for LoginObject {
+    fn from(form: LoginForm) -> Self {
+        Self {
+            email: form.email,
+            password: form.password,
         }
     }
 }

@@ -24,6 +24,10 @@ impl AppDatetime {
     pub fn timestamp(&self) -> i64 {
         self.0.timestamp()
     }
+
+    pub fn timestamp_millis(&self) -> i64 {
+        self.0.timestamp_millis()
+    }
 }
 
 impl Default for AppDatetime {

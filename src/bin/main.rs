@@ -1,5 +1,6 @@
 use dotenv::dotenv;
 use rustypaper::data::database::AppDatabase;
+use rustypaper::domain::TokenGenerator;
 use rustypaper::web::{rocket, RocketConfig};
 use serde::Deserialize;
 
@@ -12,6 +13,7 @@ struct Configuration {
     database_port: String,
     database_password: String,
     database_name: String,
+    auth_shared_secret_key: String,
 }
 
 #[rocket::main]
@@ -34,8 +36,11 @@ async fn main() -> Result<(), rocket::Error> {
     )
     .await;
 
+    let token_generator = TokenGenerator::new(env.auth_shared_secret_key);
+
     let _rocket = rocket(RocketConfig {
         database,
+        token_generator,
         api_version: API_VERSION,
     })
     .ignite()
