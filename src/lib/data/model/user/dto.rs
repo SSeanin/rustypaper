@@ -27,17 +27,17 @@ impl From<CreateUserObject> for CreateUserDto {
     }
 }
 
-pub struct GetUserDto {
+pub struct GetUserByEmailDto {
     pub(in crate::data) email: String,
 }
 
-impl From<String> for GetUserDto {
+impl From<String> for GetUserByEmailDto {
     fn from(email: String) -> Self {
         Self { email }
     }
 }
 
-impl From<GetUserObject> for GetUserDto {
+impl From<GetUserObject> for GetUserByEmailDto {
     fn from(object: GetUserObject) -> Self {
         Self {
             email: object.email.into_inner(),

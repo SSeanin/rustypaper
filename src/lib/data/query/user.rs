@@ -1,12 +1,12 @@
 use crate::data::database::DatabasePool;
-use crate::data::model::user::dto::{CreateUserDto, GetUserDto, UpdateUserDto};
+use crate::data::model::user::dto::{CreateUserDto, GetUserByEmailDto, UpdateUserDto};
 use crate::data::model::User;
 use crate::data::Result;
 use sqlx::{query, query_as};
 
-pub async fn get_user<D>(get_user_dto: D, database_pool: &DatabasePool) -> Result<User>
+pub async fn get_user_by_email<D>(get_user_dto: D, database_pool: &DatabasePool) -> Result<User>
 where
-    D: Into<GetUserDto>,
+    D: Into<GetUserByEmailDto>,
 {
     let email = get_user_dto.into().email;
 
@@ -50,7 +50,7 @@ where
     .execute(database_pool)
     .await?;
 
-    get_user(user.email, database_pool).await
+    get_user_by_email(user.email, database_pool).await
 }
 
 pub async fn update_user<D>(update_user_dto: D, database_pool: &DatabasePool) -> Result<User>
@@ -77,5 +77,5 @@ where
     .execute(database_pool)
     .await?;
 
-    get_user(user.email, database_pool).await
+    get_user_by_email(user.email, database_pool).await
 }
