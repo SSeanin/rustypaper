@@ -3,7 +3,7 @@ use crate::domain::DomainError;
 use crate::service::object::auth::LoginObject;
 use crate::service::object::user::CreateUserObject;
 use crate::service::ServiceError;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]
 pub struct SignupForm {
@@ -63,4 +63,9 @@ impl From<LoginForm> for LoginObject {
             password: form.password,
         }
     }
+}
+
+#[derive(Serialize)]
+pub struct LoginResponse {
+    pub refresh_token: String,
 }

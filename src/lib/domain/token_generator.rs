@@ -34,8 +34,8 @@ impl Claim for RefreshTokenClaims {}
 
 #[derive(Debug, Serialize)]
 pub struct TokenPair {
-    access_token: String,
-    refresh_token: String,
+    pub access_token: String,
+    pub refresh_token: String,
 }
 
 pub struct TokenGenerator {

@@ -24,7 +24,7 @@ derive_more = "0.99"
 chrono = { version = "0.4", features = ["serde"] }
 sqlx = { version = "0.5", features = ["postgres", "runtime-tokio-rustls", "uuid", "chrono", "macros", "offline"] }
 tokio = "1.17"
-rocket = { version = "0.5.0-rc.1", features = ["json"] }
+rocket = { version = "0.5.0-rc.1", features = ["json", "secrets"] }
 dotenv = "0.15.0"
 envy = "0.4.2"
 validator = { version = "0.15", features = ["derive"] }

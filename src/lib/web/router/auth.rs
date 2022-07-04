@@ -1,11 +1,12 @@
 use crate::data::database::AppDatabase;
-use crate::domain::{TokenGenerator, TokenPair, User};
+use crate::domain::{TokenGenerator, User};
 use crate::service::action::auth::login_action;
 use crate::service::action::user::create_user_action;
 use crate::service::object::user::CreateUserObject;
-use crate::web::form::auth::{LoginForm, SignupForm};
+use crate::web::form::auth::{LoginForm, LoginResponse, SignupForm};
 use crate::web::response::SuccessResponse;
 use crate::web::Result;
+use rocket::http::{Cookie, CookieJar};
 use rocket::response::status;
 use rocket::serde::json::Json;
 use rocket::{routes, Route, State};
@@ -25,9 +26,20 @@ pub async fn login(
     form: Json<LoginForm>,
     database: &State<AppDatabase>,
     token_generator: &State<TokenGenerator>,
-) -> Result<Json<SuccessResponse<TokenPair>>> {
+    cookies: &CookieJar<'_>,
+) -> Result<Json<SuccessResponse<LoginResponse>>> {
     let tokens = login_action(form.into_inner(), database.get_pool(), token_generator).await?;
-    Ok(Json(SuccessResponse::new(tokens)))
+
+    let cookie = Cookie::build("Authorization", tokens.access_token)
+        .http_only(true)
+        .secure(true)
+        .finish();
+
+    cookies.add_private(cookie);
+
+    Ok(Json(SuccessResponse::new(LoginResponse {
+        refresh_token: tokens.refresh_token,
+    })))
 }
 
 pub fn routes() -> Vec<Route> {
