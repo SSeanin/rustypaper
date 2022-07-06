@@ -20,10 +20,14 @@ pub enum DomainError {
     ParseBool(#[from] std::str::ParseBoolError),
     #[error("generic password error: {0}")]
     Password(argon2::password_hash::Error),
-    #[error("token error: {0}")]
+    #[error("generic token error: {0}")]
     Token(#[from] jsonwebtoken::errors::Error),
     #[error("invalid password")]
     InvalidPassword,
+    #[error("invalid token")]
+    InvalidToken,
+    #[error("token generator access failed")]
+    TokenGenerator,
 }
 
 impl From<argon2::password_hash::Error> for DomainError {

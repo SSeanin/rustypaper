@@ -1,7 +1,10 @@
 use crate::data::Id;
 use crate::domain::datetime::AppDatetime;
-use crate::domain::Result;
+use crate::domain::{DomainError, Result};
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
+use rocket::http::Status;
+use rocket::request::{FromRequest, Outcome};
+use rocket::Request;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 
@@ -13,21 +16,85 @@ pub const REFRESH_TOKEN_EXP: usize = 7 * 24 * 60 * 60 * 1000;
 pub trait Claim {}
 
 #[derive(Debug, Serialize, Deserialize)]
-struct AccessTokenClaims {
-    exp: usize,
-    iat: usize,
-    sub: String,
-    jti: String,
+pub struct AccessTokenClaims {
+    pub exp: usize,
+    pub iat: usize,
+    pub sub: String,
+    pub jti: String,
 }
 
 impl Claim for AccessTokenClaims {}
 
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for AccessTokenClaims {
+    type Error = DomainError;
+
+    async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
+        let access_token = match request.cookies().get_private("Authorization") {
+            None => {
+                return Outcome::Failure((Status::Unauthorized, DomainError::InvalidToken));
+            }
+            Some(access_token_cookie) => access_token_cookie.value().to_owned(),
+        };
+
+        let token_generator = match request.rocket().state::<TokenGenerator>() {
+            None => {
+                return Outcome::Failure((Status::InternalServerError, DomainError::TokenGenerator))
+            }
+            Some(token_generator) => token_generator,
+        };
+
+        match token_generator.verify_token::<AccessTokenClaims>(access_token.as_str()) {
+            Err(e) => {
+                return Outcome::Failure((Status::Unauthorized, e));
+            }
+            Ok(claims) => Outcome::Success(claims),
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
-struct RefreshTokenClaims {
-    exp: usize,
-    iat: usize,
-    sub: String,
-    sid: String,
+pub struct RefreshTokenClaims {
+    pub exp: usize,
+    pub iat: usize,
+    pub sub: String,
+    pub sid: String,
+}
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for RefreshTokenClaims {
+    type Error = DomainError;
+
+    async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
+        let refresh_token = match request.headers().get_one("refresh-token") {
+            None => {
+                return Outcome::Failure((Status::Unauthorized, DomainError::InvalidToken));
+            }
+            Some(refresh_token) => {
+                let token = refresh_token.split_whitespace().collect::<Vec<&str>>();
+
+                if token[0] == "Bearer" {
+                    token[1]
+                } else {
+                    return Outcome::Failure((Status::Unauthorized, DomainError::InvalidToken));
+                }
+            }
+        };
+
+        let token_generator = match request.rocket().state::<TokenGenerator>() {
+            None => {
+                return Outcome::Failure((Status::InternalServerError, DomainError::TokenGenerator))
+            }
+            Some(token_generator) => token_generator,
+        };
+
+        match token_generator.verify_token::<RefreshTokenClaims>(refresh_token) {
+            Err(e) => {
+                return Outcome::Failure((Status::Unauthorized, e));
+            }
+            Ok(claims) => Outcome::Success(claims),
+        }
+    }
 }
 
 impl Claim for RefreshTokenClaims {}
@@ -82,12 +149,11 @@ impl TokenGenerator {
         })
     }
 
-    pub fn verify_token<C>(&self, token: &str, sub: &str) -> Result<C>
+    pub fn verify_token<C>(&self, token: &str) -> Result<C>
     where
         C: Claim + DeserializeOwned,
     {
-        let mut validation = Validation::new(Algorithm::HS512);
-        validation.sub = Some(sub.to_owned());
+        let validation = Validation::new(Algorithm::HS512);
 
         Ok(decode::<C>(
             token,

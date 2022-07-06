@@ -1,6 +1,7 @@
+use crate::domain::token_generator::{AccessTokenClaims, RefreshTokenClaims};
 use crate::domain::user::field::{Email, FirstName, LastName, Password};
 use crate::domain::DomainError;
-use crate::service::object::auth::LoginObject;
+use crate::service::object::auth::{LoginObject, RefreshObject};
 use crate::service::object::user::CreateUserObject;
 use crate::service::ServiceError;
 use serde::{Deserialize, Serialize};
@@ -68,4 +69,18 @@ impl From<LoginForm> for LoginObject {
 #[derive(Serialize)]
 pub struct LoginResponse {
     pub refresh_token: String,
+}
+
+pub struct RefreshForm {
+    pub access_token_claims: AccessTokenClaims,
+    pub refresh_token_claims: RefreshTokenClaims,
+}
+
+impl From<RefreshForm> for RefreshObject {
+    fn from(form: RefreshForm) -> Self {
+        Self {
+            access_token_claims: form.access_token_claims,
+            refresh_token_claims: form.refresh_token_claims,
+        }
+    }
 }
