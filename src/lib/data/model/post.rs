@@ -3,8 +3,9 @@ pub mod dto;
 use crate::data::Id;
 use crate::domain;
 use crate::domain::post::field::{
-    Content, CreatedAt, IsPublished, PostId, Shortcode, Title, UpdatedAt,
+    AuthorId, Content, CreatedAt, IsPublished, PostId, Shortcode, Title, UpdatedAt,
 };
+use crate::domain::user::field::UserId;
 use sqlx::types::{chrono::DateTime, chrono::Utc, Uuid};
 
 #[derive(Debug)]
@@ -14,6 +15,7 @@ pub struct Post {
     pub(in crate::data) content: String,
     pub(in crate::data) shortcode: String,
     pub(in crate::data) is_published: bool,
+    pub(in crate::data) author_id: Uuid,
     pub(in crate::data) created_at: DateTime<Utc>,
     pub(in crate::data) updated_at: DateTime<Utc>,
 }
@@ -30,6 +32,7 @@ impl TryFrom<Post> for domain::Post {
             content: Content::from_str(raw.content.as_str())?,
             shortcode: Shortcode::from_str(raw.shortcode.as_str())?,
             is_published: IsPublished::from(raw.is_published),
+            author_id: AuthorId::from(UserId::from(Id::from(raw.author_id))),
             created_at: CreatedAt::new(raw.created_at.into()),
             updated_at: UpdatedAt::new(raw.updated_at.into()),
         })

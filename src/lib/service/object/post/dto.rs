@@ -1,4 +1,4 @@
-use crate::domain::post::field::{Content, IsPublished, Shortcode, Title};
+use crate::domain::post::field::{AuthorId, Content, IsPublished, Shortcode, Title};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -6,6 +6,7 @@ pub struct CreatePostObject {
     pub title: Title,
     pub content: Content,
     pub is_published: IsPublished,
+    pub author_id: AuthorId,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

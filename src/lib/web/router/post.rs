@@ -1,6 +1,6 @@
 use crate::data::database::AppDatabase;
 use crate::domain::post::field::Shortcode;
-use crate::domain::Post;
+use crate::domain::{Post, User};
 use crate::service::action::post::{
     create_post_action, delete_post_action, get_all_posts_action, get_post_action,
     update_post_action,
@@ -34,10 +34,15 @@ async fn get_post(
 
 #[rocket::post("/", format = "json", data = "<form>")]
 async fn create_post(
+    user: User,
     form: Json<CreatePostForm>,
     database: &State<AppDatabase>,
 ) -> Result<status::Created<Json<SuccessResponse<Post>>>> {
-    let object: CreatePostObject = form.into_inner().try_into()?;
+    let form = CreatePostForm {
+        author_id: user.user_id,
+        ..form.into_inner()
+    };
+    let object: CreatePostObject = form.try_into()?;
     let post = create_post_action(object, database.get_pool()).await?;
     Ok(
         status::Created::new(uri!(get_post(&post.shortcode)).to_string())

@@ -57,9 +57,10 @@ where
                 content,
                 shortcode,
                 is_published,
+                author_id,
                 updated_at
             ) VALUES (
-                $1, $2, $3, $4, $5, $6
+                $1, $2, $3, $4, $5, $6, $7
             )
         "#,
         post.post_id,
@@ -67,6 +68,7 @@ where
         post.content,
         post.shortcode,
         post.is_published,
+        post.author_id,
         post.updated_at
     )
     .execute(database_pool)

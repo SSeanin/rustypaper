@@ -13,6 +13,7 @@ pub struct CreatePostDto {
     pub(in crate::data) content: String,
     pub(in crate::data) shortcode: String,
     pub(in crate::data) is_published: bool,
+    pub(in crate::data) author_id: Uuid,
     pub(in crate::data) updated_at: DateTime<Utc>,
 }
 
@@ -24,6 +25,7 @@ impl From<CreatePostObject> for CreatePostDto {
             content: object.content.into_inner(),
             shortcode: Shortcode::new().into_inner(),
             is_published: object.is_published.into_inner(),
+            author_id: object.author_id.into_inner().into_inner().into_inner(),
             updated_at: AppDatetime::now().into_inner(),
         }
     }

@@ -1,4 +1,5 @@
-use crate::domain::post::field::{Content, IsPublished, Shortcode, Title};
+use crate::domain::post::field::{AuthorId, Content, IsPublished, Shortcode, Title};
+use crate::domain::user::field::UserId;
 use crate::domain::DomainError;
 use crate::service::object::post::{CreatePostObject, UpdatePostObject};
 use crate::service::ServiceError;
@@ -6,9 +7,11 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct CreatePostForm {
-    title: String,
-    content: String,
-    is_published: bool,
+    pub(in crate::web) title: String,
+    pub(in crate::web) content: String,
+    pub(in crate::web) is_published: bool,
+    #[serde(skip)]
+    pub(in crate::web) author_id: UserId,
 }
 
 impl TryFrom<CreatePostForm> for CreatePostObject {
@@ -32,6 +35,7 @@ impl TryFrom<CreatePostForm> for CreatePostObject {
                 title: title.expect("failed to parse title"),
                 content: content.expect("failed to parse content"),
                 is_published: IsPublished::from(form.is_published),
+                author_id: AuthorId::new(form.author_id),
             })
         } else {
             Err(ServiceError::Validation(validation_errors))
