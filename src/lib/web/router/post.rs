@@ -53,6 +53,7 @@ async fn create_post(
 #[rocket::patch("/<shortcode>", format = "json", data = "<form>")]
 async fn update_post(
     shortcode: Shortcode,
+    user: User,
     form: Json<UpdatePostForm>,
     database: &State<AppDatabase>,
 ) -> Result<Json<SuccessResponse<Post>>> {
@@ -61,13 +62,17 @@ async fn update_post(
         ..form.into_inner()
     };
     let object: UpdatePostObject = form.try_into()?;
-    let post = update_post_action(object, database.get_pool()).await?;
+    let post = update_post_action(object, user, database.get_pool()).await?;
     Ok(Json(SuccessResponse::new(post)))
 }
 
 #[rocket::delete("/<shortcode>")]
-async fn delete_post(shortcode: &str, database: &State<AppDatabase>) -> Result<status::NoContent> {
-    let _ = delete_post_action(shortcode, database.get_pool()).await?;
+async fn delete_post(
+    shortcode: Shortcode,
+    user: User,
+    database: &State<AppDatabase>,
+) -> Result<status::NoContent> {
+    let _ = delete_post_action(shortcode.as_str(), user, database.get_pool()).await?;
     Ok(status::NoContent)
 }
 

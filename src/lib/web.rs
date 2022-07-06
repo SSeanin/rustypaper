@@ -41,9 +41,15 @@ impl From<ServiceError> for ApiError {
             ServiceError::NotFound => Self::NotFound(Json(FailResponse::new(
                 "requested entity was now found on this server".to_owned(),
             ))),
+
             ServiceError::Validation(validation_errors) => {
                 Self::Validation(Json(FailResponse::new(validation_errors)))
             }
+
+            ServiceError::Unauthorized => {
+                Self::Unauthorized(Json(FailResponse::new("unauthorized".to_owned())))
+            }
+
             ServiceError::Domain(domain_error) => match domain_error {
                 DomainError::InvalidPassword | DomainError::Token(..) => {
                     Self::Unauthorized(Json(FailResponse::new("unauthorized".to_owned())))
@@ -53,6 +59,7 @@ impl From<ServiceError> for ApiError {
                     None,
                 ))),
             },
+
             _ => Self::Internal(Json(ErrorResponse::new(
                 "internal server error".to_owned(),
                 None,

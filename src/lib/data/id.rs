@@ -9,7 +9,7 @@ pub enum IdError {
     Uuid(#[from] uuid::Error),
 }
 
-#[derive(Debug, Serialize, Deserialize, From, Display, Copy, Clone)]
+#[derive(Debug, Serialize, Deserialize, From, Display, Copy, Clone, Eq, PartialEq)]
 pub struct Id(Uuid);
 
 impl Id {

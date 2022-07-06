@@ -1,10 +1,10 @@
 use crate::data::database::DatabasePool;
 use crate::data::query::post::{create_post, delete_post, get_all_posts, get_post, update_post};
-use crate::domain::Post;
+use crate::domain::{Post, User};
 use crate::service::object::post::{
     CreatePostObject, DeletePostObject, GetAllPostsObject, GetPostObject, UpdatePostObject,
 };
-use crate::service::Result;
+use crate::service::{Result, ServiceError};
 
 pub async fn create_post_action<O>(
     create_post_object: O,
@@ -48,22 +48,40 @@ where
 
 pub async fn update_post_action<O>(
     update_post_object: O,
+    user: User,
     database_pool: &DatabasePool,
 ) -> Result<Post>
 where
     O: Into<UpdatePostObject>,
 {
-    Ok(update_post(update_post_object.into(), database_pool)
-        .await?
-        .try_into()?)
+    let update_post_object = update_post_object.into();
+
+    let post = get_post_action(update_post_object.shortcode.as_str(), database_pool).await?;
+
+    if post.author_id.into_inner() == user.user_id {
+        Ok(update_post(update_post_object, database_pool)
+            .await?
+            .try_into()?)
+    } else {
+        Err(ServiceError::Unauthorized)
+    }
 }
 
 pub async fn delete_post_action<O>(
     delete_post_object: O,
+    user: User,
     database_pool: &DatabasePool,
 ) -> Result<()>
 where
     O: Into<DeletePostObject>,
 {
-    Ok(delete_post(delete_post_object.into(), database_pool).await?)
+    let delete_post_object = delete_post_object.into();
+
+    let post = get_post_action(delete_post_object.shortcode.as_str(), database_pool).await?;
+
+    if post.author_id.into_inner() == user.user_id {
+        Ok(delete_post(delete_post_object, database_pool).await?)
+    } else {
+        Err(ServiceError::Unauthorized)
+    }
 }

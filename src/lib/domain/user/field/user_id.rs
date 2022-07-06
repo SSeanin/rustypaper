@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::fmt::Formatter;
 
-#[derive(Debug, Serialize, Deserialize, Constructor, From, Copy, Clone)]
+#[derive(Debug, Serialize, Deserialize, Constructor, From, Copy, Clone, Eq, PartialEq)]
 pub struct UserId(Id);
 
 impl UserId {

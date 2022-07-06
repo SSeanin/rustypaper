@@ -19,6 +19,8 @@ pub enum ServiceError {
     Validation(validator::ValidationErrors),
     #[error("invalid uuid")]
     InvalidUuid,
+    #[error("unauthorized")]
+    Unauthorized,
 }
 
 impl From<DataError> for ServiceError {
