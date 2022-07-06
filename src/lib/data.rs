@@ -9,6 +9,8 @@ pub use id::Id;
 pub enum DataError {
     #[error("database error: {0}")]
     Database(#[from] sqlx::Error),
+    #[error("id error: {0}")]
+    Id(#[from] id::IdError),
 }
 
 pub(self) type Result<T> = std::result::Result<T, DataError>;

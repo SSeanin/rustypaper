@@ -17,6 +17,8 @@ pub enum ServiceError {
     NotFound,
     #[error("validation error: {0}")]
     Validation(validator::ValidationErrors),
+    #[error("invalid uuid")]
+    InvalidUuid,
 }
 
 impl From<DataError> for ServiceError {
@@ -26,6 +28,7 @@ impl From<DataError> for ServiceError {
                 RowNotFound => Self::NotFound,
                 other => Self::Data(DataError::Database(other)),
             },
+            DataError::Id(..) => Self::InvalidUuid,
         }
     }
 }

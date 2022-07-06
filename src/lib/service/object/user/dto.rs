@@ -1,4 +1,5 @@
-use crate::domain::user::field::{Email, FirstName, LastName, Password};
+use crate::data::Id;
+use crate::domain::user::field::{Email, FirstName, LastName, Password, UserId};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -11,6 +12,25 @@ pub struct CreateUserObject {
 
 pub struct GetUserObject {
     pub email: Email,
+}
+
+pub struct GetUserByIdObject {
+    pub id: UserId,
+}
+
+impl From<String> for GetUserByIdObject {
+    fn from(id: String) -> Self {
+        use std::str::FromStr;
+
+        let id = match Id::from_str(id.as_str()) {
+            Ok(id) => id,
+            Err(..) => Id::nil(),
+        };
+
+        Self {
+            id: UserId::new(id),
+        }
+    }
 }
 
 pub struct UpdateUserObject {

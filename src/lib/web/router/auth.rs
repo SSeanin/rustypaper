@@ -75,6 +75,11 @@ pub async fn refresh(
     })))
 }
 
+#[rocket::get("/me")]
+pub async fn me(user: User) -> Result<Json<SuccessResponse<User>>> {
+    Ok(Json(SuccessResponse::new(user)))
+}
+
 pub fn routes() -> Vec<Route> {
-    routes!(signup, login, refresh)
+    routes!(signup, login, refresh, me)
 }

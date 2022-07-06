@@ -28,6 +28,8 @@ pub enum DomainError {
     InvalidToken,
     #[error("token generator access failed")]
     TokenGenerator,
+    #[error("database access failed")]
+    Database,
 }
 
 impl From<argon2::password_hash::Error> for DomainError {

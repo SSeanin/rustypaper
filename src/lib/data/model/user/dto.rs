@@ -1,6 +1,6 @@
 use crate::data::Id;
 use crate::domain::AppDatetime;
-use crate::service::object::user::dto::{GetUserObject, UpdateUserObject};
+use crate::service::object::user::dto::{GetUserByIdObject, GetUserObject, UpdateUserObject};
 use crate::service::object::user::CreateUserObject;
 use chrono::{DateTime, Utc};
 use uuid::Uuid;
@@ -41,6 +41,18 @@ impl From<GetUserObject> for GetUserByEmailDto {
     fn from(object: GetUserObject) -> Self {
         Self {
             email: object.email.into_inner(),
+        }
+    }
+}
+
+pub struct GetUserByIdDto {
+    pub(in crate::data) id: Uuid,
+}
+
+impl From<GetUserByIdObject> for GetUserByIdDto {
+    fn from(object: GetUserByIdObject) -> Self {
+        Self {
+            id: object.id.into_inner().into_inner(),
         }
     }
 }

@@ -1,5 +1,7 @@
 use crate::data::database::DatabasePool;
-use crate::data::model::user::dto::{CreateUserDto, GetUserByEmailDto, UpdateUserDto};
+use crate::data::model::user::dto::{
+    CreateUserDto, GetUserByEmailDto, GetUserByIdDto, UpdateUserDto,
+};
 use crate::data::model::User;
 use crate::data::Result;
 use sqlx::{query, query_as};
@@ -16,6 +18,23 @@ where
             SELECT * FROM "user" WHERE email = $1
         "#,
         email
+    )
+    .fetch_one(database_pool)
+    .await?)
+}
+
+pub async fn get_user_by_id<D>(get_user_by_id_dto: D, database_pool: &DatabasePool) -> Result<User>
+where
+    D: Into<GetUserByIdDto>,
+{
+    let id = get_user_by_id_dto.into().id;
+
+    Ok(query_as!(
+        User,
+        r#"
+            SELECT * FROM "user" WHERE user_id = $1
+        "#,
+        id
     )
     .fetch_one(database_pool)
     .await?)
