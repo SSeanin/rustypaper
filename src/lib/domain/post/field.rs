@@ -5,8 +5,7 @@ pub mod post_id;
 pub mod shortcode;
 pub mod title;
 
-pub use crate::domain::timestamp::CreatedAt;
-pub use crate::domain::timestamp::UpdatedAt;
+pub use crate::domain::timestamp::{CreatedAt, UpdatedAt};
 pub use author_id::AuthorId;
 pub use content::Content;
 pub use is_published::IsPublished;

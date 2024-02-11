@@ -1,5 +1,7 @@
-use crate::data::Id;
-use crate::domain::user::field::{Email, FirstName, LastName, Password, UserId};
+use crate::{
+    data::Id,
+    domain::user::field::{Email, FirstName, LastName, Password, UserId},
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

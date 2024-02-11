@@ -1,9 +1,17 @@
-use crate::domain::token_generator::{AccessTokenClaims, RefreshTokenClaims};
-use crate::domain::user::field::{Email, FirstName, LastName, Password};
-use crate::domain::DomainError;
-use crate::service::object::auth::{LoginObject, RefreshObject};
-use crate::service::object::user::CreateUserObject;
-use crate::service::ServiceError;
+use crate::{
+    domain::{
+        token_generator::{AccessTokenClaims, RefreshTokenClaims},
+        user::field::{Email, FirstName, LastName, Password},
+        DomainError,
+    },
+    service::{
+        object::{
+            auth::{LoginObject, RefreshObject},
+            user::CreateUserObject,
+        },
+        ServiceError,
+    },
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]

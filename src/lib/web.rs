@@ -1,69 +1,73 @@
-use crate::domain::DomainError;
-use crate::service::ServiceError;
-use crate::web::response::{ErrorResponse, FailResponse};
-use rocket::serde::json::Json;
-use rocket::Responder;
-use validator::ValidationErrors;
+use crate::{
+    domain::DomainError,
+    service::ServiceError,
+    web::response::{ErrorResponse, FailResponse},
+};
+use axum::{http::status::StatusCode, Json};
 
-pub mod catcher;
+pub mod extractor;
 pub mod form;
 pub mod response;
 pub mod router;
 pub mod server;
 
-pub use server::rocket;
-pub use server::RocketConfig;
+pub use server::Config;
 
-pub type Result<T> = std::result::Result<T, ApiError>;
+pub type Result<T> = axum::response::Result<T>;
 
-#[derive(Debug, thiserror::Error, Responder)]
-pub enum ApiError {
-    #[error("not found")]
-    #[response(status = 404, content_type = "json")]
-    NotFound(Json<FailResponse<String>>),
+impl axum::response::IntoResponse for ServiceError {
+    fn into_response(self) -> axum::response::Response {
+        match self {
+            ServiceError::NotFound => (
+                StatusCode::NOT_FOUND,
+                Json(FailResponse::new(
+                    "requested entity was now found on this server".to_owned(),
+                )),
+            )
+                .into_response(),
 
-    #[error("internal sever error")]
-    #[response(status = 500, content_type = "json")]
-    Internal(Json<ErrorResponse<String>>),
+            ServiceError::Validation(validation_errors) => (
+                StatusCode::BAD_REQUEST,
+                Json(FailResponse::new(validation_errors)),
+            )
+                .into_response(),
 
-    #[error("validation error")]
-    #[response(status = 400, content_type = "json")]
-    Validation(Json<FailResponse<ValidationErrors>>),
-
-    #[error("unauthorized")]
-    #[response(status = 401, content_type = "json")]
-    Unauthorized(Json<FailResponse<String>>),
-}
-
-impl From<ServiceError> for ApiError {
-    fn from(service_error: ServiceError) -> Self {
-        match service_error {
-            ServiceError::NotFound => Self::NotFound(Json(FailResponse::new(
-                "requested entity was now found on this server".to_owned(),
-            ))),
-
-            ServiceError::Validation(validation_errors) => {
-                Self::Validation(Json(FailResponse::new(validation_errors)))
-            }
-
-            ServiceError::Unauthorized => {
-                Self::Unauthorized(Json(FailResponse::new("unauthorized".to_owned())))
-            }
+            ServiceError::Unauthorized => (
+                StatusCode::UNAUTHORIZED,
+                Json(FailResponse::new("unauthorized".to_owned())),
+            )
+                .into_response(),
 
             ServiceError::Domain(domain_error) => match domain_error {
-                DomainError::InvalidPassword | DomainError::Token(..) => {
-                    Self::Unauthorized(Json(FailResponse::new("unauthorized".to_owned())))
-                }
-                _ => Self::Internal(Json(ErrorResponse::new(
-                    "internal server error".to_owned(),
-                    None,
-                ))),
+                DomainError::InvalidPassword | DomainError::Token(..) => (
+                    StatusCode::UNAUTHORIZED,
+                    Json(FailResponse::new("unauthorized".to_owned())),
+                )
+                    .into_response(),
+                _ => (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    Json(ErrorResponse::<String>::new(
+                        "internal server error".to_owned(),
+                        None,
+                    )),
+                )
+                    .into_response(),
             },
 
-            _ => Self::Internal(Json(ErrorResponse::new(
-                "internal server error".to_owned(),
-                None,
-            ))),
+            ServiceError::InvalidToken => (
+                StatusCode::UNAUTHORIZED,
+                Json(FailResponse::new("unauthorized".to_owned())),
+            )
+                .into_response(),
+
+            _ => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(ErrorResponse::<String>::new(
+                    "internal server error".to_owned(),
+                    None,
+                )),
+            )
+                .into_response(),
         }
     }
 }

@@ -1,7 +1,8 @@
-use crate::data::Id;
-use crate::domain::AppDatetime;
-use crate::service::object::user::dto::{GetUserByIdObject, GetUserObject, UpdateUserObject};
-use crate::service::object::user::CreateUserObject;
+use crate::{
+    data::Id,
+    domain::AppDatetime,
+    service::object::user::{CreateUserObject, GetUserByIdObject, GetUserObject, UpdateUserObject},
+};
 use chrono::{DateTime, Utc};
 use uuid::Uuid;
 

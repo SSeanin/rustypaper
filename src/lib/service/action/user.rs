@@ -1,9 +1,14 @@
-use crate::data::database::DatabasePool;
-use crate::data::query::user::{create_user, get_user_by_id};
-use crate::domain::User;
-use crate::service::object::user::dto::GetUserByIdObject;
-use crate::service::object::user::CreateUserObject;
-use crate::service::Result;
+use crate::{
+    data::{
+        database::DatabasePool,
+        query::user::{create_user, get_user_by_id},
+    },
+    domain::User,
+    service::{
+        object::user::{CreateUserObject, GetUserByIdObject},
+        Result,
+    },
+};
 
 pub async fn get_user_by_id_action<O>(
     get_user_by_id_object: O,

@@ -1,8 +1,7 @@
 use crate::domain::user::field::UserId;
 use derive_more::{Constructor, From};
 use serde::{Deserialize, Serialize};
-use std::fmt;
-use std::fmt::Formatter;
+use std::fmt::{self, Formatter};
 
 #[derive(Debug, Serialize, Deserialize, Constructor, From)]
 pub struct AuthorId(UserId);

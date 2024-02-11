@@ -1,9 +1,11 @@
-use crate::data::database::DatabasePool;
-use crate::data::model::post::dto::{
-    CreatePostDto, DeletePostDto, GetAllPostsDto, GetPostDto, UpdatePostDto,
+use crate::data::{
+    database::DatabasePool,
+    model::{
+        post::dto::{CreatePostDto, DeletePostDto, GetAllPostsDto, GetPostDto, UpdatePostDto},
+        Post,
+    },
+    Result,
 };
-use crate::data::model::Post;
-use crate::data::Result;
 use sqlx::{query, query_as};
 
 pub async fn get_all_posts<D>(

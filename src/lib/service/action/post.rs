@@ -1,10 +1,16 @@
-use crate::data::database::DatabasePool;
-use crate::data::query::post::{create_post, delete_post, get_all_posts, get_post, update_post};
-use crate::domain::{Post, User};
-use crate::service::object::post::{
-    CreatePostObject, DeletePostObject, GetAllPostsObject, GetPostObject, UpdatePostObject,
+use crate::{
+    data::{
+        database::DatabasePool,
+        query::post::{create_post, delete_post, get_all_posts, get_post, update_post},
+    },
+    domain::{Post, User},
+    service::{
+        object::post::{
+            CreatePostObject, DeletePostObject, GetAllPostsObject, GetPostObject, UpdatePostObject,
+        },
+        Result, ServiceError,
+    },
 };
-use crate::service::{Result, ServiceError};
 
 pub async fn create_post_action<O>(
     create_post_object: O,

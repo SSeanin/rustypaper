@@ -1,7 +1,10 @@
+use axum_extra::extract::cookie::Key;
 use dotenv::dotenv;
-use rustypaper::data::database::AppDatabase;
-use rustypaper::domain::TokenGenerator;
-use rustypaper::web::{rocket, RocketConfig};
+use rustypaper::{
+    data::database::AppDatabase,
+    domain::TokenGenerator,
+    web::{server::generate_app, Config},
+};
 use serde::Deserialize;
 
 const API_VERSION: &str = "0";
@@ -16,8 +19,8 @@ struct Configuration {
     auth_shared_secret_key: String,
 }
 
-#[rocket::main]
-async fn main() -> Result<(), rocket::Error> {
+#[tokio::main]
+async fn main() {
     dotenv().ok();
 
     let env = envy::from_env::<Configuration>()
@@ -38,15 +41,15 @@ async fn main() -> Result<(), rocket::Error> {
 
     let token_generator = TokenGenerator::new(env.auth_shared_secret_key);
 
-    let _rocket = rocket(RocketConfig {
+    let cookie_key = Key::generate();
+
+    let (routes, listener) = generate_app(Config {
         database,
         token_generator,
+        cookie_key,
         api_version: API_VERSION,
     })
-    .ignite()
-    .await?
-    .launch()
-    .await?;
+    .await;
 
-    Ok(())
+    axum::serve(listener, routes).await.unwrap();
 }

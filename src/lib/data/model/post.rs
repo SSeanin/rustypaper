@@ -1,11 +1,15 @@
 pub mod dto;
 
-use crate::data::Id;
-use crate::domain;
-use crate::domain::post::field::{
-    AuthorId, Content, CreatedAt, IsPublished, PostId, Shortcode, Title, UpdatedAt,
+use crate::{
+    data::Id,
+    domain::{
+        self,
+        post::field::{
+            AuthorId, Content, CreatedAt, IsPublished, PostId, Shortcode, Title, UpdatedAt,
+        },
+        user::field::UserId,
+    },
 };
-use crate::domain::user::field::UserId;
 use sqlx::types::{chrono::DateTime, chrono::Utc, Uuid};
 
 #[derive(Debug)]

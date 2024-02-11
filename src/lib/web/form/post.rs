@@ -1,8 +1,14 @@
-use crate::domain::post::field::{AuthorId, Content, IsPublished, Shortcode, Title};
-use crate::domain::user::field::UserId;
-use crate::domain::DomainError;
-use crate::service::object::post::{CreatePostObject, UpdatePostObject};
-use crate::service::ServiceError;
+use crate::{
+    domain::{
+        post::field::{AuthorId, Content, IsPublished, Shortcode, Title},
+        user::field::UserId,
+        DomainError,
+    },
+    service::{
+        object::post::{CreatePostObject, UpdatePostObject},
+        ServiceError,
+    },
+};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]

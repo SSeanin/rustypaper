@@ -1,24 +1,44 @@
-use crate::data::database::AppDatabase;
-use crate::domain::TokenGenerator;
-use crate::web::catcher::api;
-use crate::web::router::auth;
-use crate::web::router::post;
-use rocket::{Build, Rocket};
+use crate::{data::database::AppDatabase, domain::TokenGenerator, web::router};
+use axum::{extract::FromRef, Router};
+use axum_extra::extract::cookie::Key;
+use tokio::net::TcpListener;
 
-pub struct RocketConfig {
+pub struct Config {
     pub database: AppDatabase,
     pub token_generator: TokenGenerator,
+    pub cookie_key: Key,
     pub api_version: &'static str,
 }
 
-pub fn rocket(config: RocketConfig) -> Rocket<Build> {
-    Rocket::build()
-        .manage::<AppDatabase>(config.database)
-        .manage::<TokenGenerator>(config.token_generator)
-        .mount(
-            format!("/api/v{}/posts", config.api_version),
-            post::routes(),
-        )
-        .mount(format!("/api/v{}/auth", config.api_version), auth::routes())
-        .register(format!("/api/v{}", config.api_version), api::catchers())
+#[derive(Clone, FromRef)]
+pub struct AppState {
+    pub key: Key,
+    pub database: AppDatabase,
+    pub token_generator: TokenGenerator,
+}
+
+impl From<AppState> for Key {
+    fn from(value: AppState) -> Self {
+        value.key
+    }
+}
+
+pub async fn generate_app(config: Config) -> (Router, TcpListener) {
+    let app_state = AppState {
+        database: config.database,
+        token_generator: config.token_generator,
+        key: config.cookie_key,
+    };
+
+    let api_routes = Router::new()
+        .nest("/posts", router::post::routes(app_state.clone()))
+        .nest("/auth", router::auth::routes(app_state));
+
+    let routes = Router::new().nest(format!("/api/v{}", config.api_version).as_str(), api_routes);
+
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+        .await
+        .unwrap();
+
+    (routes, listener)
 }

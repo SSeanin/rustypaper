@@ -1,10 +1,10 @@
 pub mod dto;
 
-use crate::data::Id;
-use crate::domain::user::field::{
-    CreatedAt, Email, FirstName, LastName, Password, UpdatedAt, UserId,
+use crate::{
+    data::Id,
+    domain::user::field::{CreatedAt, Email, FirstName, LastName, Password, UpdatedAt, UserId},
+    domain::DomainError,
 };
-use crate::domain::DomainError;
 use sqlx::types::{chrono::DateTime, chrono::Utc, Uuid};
 
 pub struct User {
