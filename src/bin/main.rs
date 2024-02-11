@@ -17,6 +17,7 @@ struct Configuration {
     database_password: String,
     database_name: String,
     auth_shared_secret_key: String,
+    cookie_key: String,
 }
 
 #[tokio::main]
@@ -41,7 +42,8 @@ async fn main() {
 
     let token_generator = TokenGenerator::new(env.auth_shared_secret_key);
 
-    let cookie_key = Key::generate();
+    let cookie_key = Key::try_from(env.cookie_key.as_bytes())
+        .expect("Cookie key is too short. It must be at least 64 bytes");
 
     let (routes, listener) = generate_app(Config {
         database,
