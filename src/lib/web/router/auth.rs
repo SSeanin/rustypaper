@@ -18,7 +18,6 @@ use crate::{
     },
 };
 use axum::{
-    debug_handler,
     extract::State,
     http::{header, status::StatusCode, HeaderName},
     routing::{get, post},
@@ -43,7 +42,6 @@ pub async fn signup(
     ))
 }
 
-#[debug_handler]
 pub async fn login(
     State(state): State<AppState>,
     jar: PrivateCookieJar,
@@ -72,7 +70,6 @@ pub async fn login(
     ))
 }
 
-#[debug_handler]
 pub async fn refresh(
     access_token_claims: AccessTokenClaims,
     refresh_token_claims: RefreshTokenClaims,
@@ -110,7 +107,6 @@ pub async fn refresh(
     ))
 }
 
-#[debug_handler]
 pub async fn me(
     user: User,
     State(_): State<AppState>,

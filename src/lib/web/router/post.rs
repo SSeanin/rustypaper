@@ -18,7 +18,6 @@ use crate::{
     },
 };
 use axum::{
-    debug_handler,
     extract::{Host, Json, OriginalUri, Path, Query, State},
     http::{header, status::StatusCode, HeaderName},
     routing::get,
@@ -33,7 +32,6 @@ async fn get_all_posts(
     Ok((StatusCode::OK, Json(SuccessResponse::new(posts))))
 }
 
-#[debug_handler]
 async fn get_post(
     Path(shortcode): Path<Shortcode>,
     State(state): State<AppState>,
@@ -42,7 +40,6 @@ async fn get_post(
     Ok((StatusCode::OK, Json(SuccessResponse::new(post))))
 }
 
-#[debug_handler]
 async fn create_post(
     user: User,
     State(state): State<AppState>,
@@ -70,7 +67,6 @@ async fn create_post(
     ))
 }
 
-#[debug_handler]
 async fn update_post(
     user: User,
     Path(shortcode): Path<Shortcode>,
@@ -86,7 +82,6 @@ async fn update_post(
     Ok((StatusCode::OK, Json(SuccessResponse::new(post))))
 }
 
-#[debug_handler]
 async fn delete_post(
     user: User,
     Path(shortcode): Path<Shortcode>,
