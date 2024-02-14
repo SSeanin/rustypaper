@@ -1,5 +1,5 @@
 use axum_extra::extract::cookie::Key;
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use rustypaper::{
     data::database::AppDatabase,
     domain::TokenGenerator,

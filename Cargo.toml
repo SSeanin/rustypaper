@@ -30,7 +30,7 @@ sqlx = { version = "0.7", features = [
     "macros",
 ] }
 tokio = { version = "1.36", features = ["macros", "rt-multi-thread"] }
-dotenv = "0.15"
+dotenvy = "0.15"
 envy = "0.4"
 validator = { version = "0.16", features = ["derive"] }
 argon2 = "0.5"
@@ -40,3 +40,6 @@ axum = { version = "0.7", features = ["macros"] }
 tracing-subscriber = "0.3"
 tower = "0.4"
 axum-extra = { version = "0.9", features = ["cookie-private"] }
+
+[profile.dev.package.sqlx-macros]
+opt-level = 3
