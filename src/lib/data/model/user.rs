@@ -17,6 +17,7 @@ pub struct User {
     pub(in crate::data) updated_at: DateTime<Utc>,
 }
 
+// TODO conversions coming from the data layer should not be validated
 impl TryFrom<User> for crate::domain::User {
     type Error = DomainError;
 
