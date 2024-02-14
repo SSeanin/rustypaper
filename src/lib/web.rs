@@ -21,7 +21,7 @@ impl axum::response::IntoResponse for ServiceError {
             ServiceError::NotFound => (
                 StatusCode::NOT_FOUND,
                 Json(FailResponse::new(
-                    "requested entity was now found on this server".to_owned(),
+                    "requested entity was not found on this server".to_owned(),
                 )),
             )
                 .into_response(),
