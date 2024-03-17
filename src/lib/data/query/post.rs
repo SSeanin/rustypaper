@@ -23,7 +23,7 @@ where
             SELECT
                 post_id,
                 title,
-                LEFT(content, 80) as content,
+                LEFT(content, 450) as content,
                 shortcode,
                 author_id,
                 is_published,
