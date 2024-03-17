@@ -32,7 +32,7 @@ where
                 user_id,
                 first_name as user_first_name,
                 last_name as user_last_name
-            FROM post INNER JOIN "user" ON post.author_id = "user".user_id LIMIT $1 OFFSET $2
+            FROM post INNER JOIN "user" ON post.author_id = "user".user_id ORDER BY post.created_at DESC LIMIT $1 OFFSET $2
         "#,
         get_all_posts_dto.limit,
         get_all_posts_dto.skip
