@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO post (\n                post_id,\n                title,\n                content,\n                shortcode,\n                is_published,\n                author_id,\n                updated_at\n            ) VALUES (\n                $1, $2, $3, $4, $5, $6, $7\n            )\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Varchar",
+        "Text",
+        "Bpchar",
+        "Bool",
+        "Uuid",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "0f78c2a79d49db83fb49838423e0fa9b9cb20feaa898ffee87d98aea017a20ab"
+}

@@ -40,7 +40,12 @@ axum = { version = "0.7", features = ["macros"] }
 tracing-subscriber = "0.3"
 tower = "0.4"
 axum-extra = { version = "0.9", features = ["cookie-private"] }
-tower-http = { version = "0.5.2", features = ["cors", "trace", "compression-gzip", "timeout"] }
+tower-http = { version = "0.5.2", features = [
+    "cors",
+    "trace",
+    "compression-gzip",
+    "timeout",
+] }
 http = "1.1.0"
 
 [profile.dev.package.sqlx-macros]

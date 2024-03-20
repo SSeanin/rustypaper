@@ -1,0 +1,83 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT\n                post_id,\n                title,\n                LEFT(content, 450) as content,\n                shortcode,\n                author_id,\n                is_published,\n                post.created_at,\n                post.updated_at,\n                user_id,\n                first_name as user_first_name,\n                last_name as user_last_name\n            FROM post INNER JOIN \"user\" ON post.author_id = \"user\".user_id ORDER BY post.created_at DESC LIMIT $1 OFFSET $2\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "post_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "content",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "shortcode",
+        "type_info": "Bpchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "author_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 5,
+        "name": "is_published",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 6,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "user_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 9,
+        "name": "user_first_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "user_last_name",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      null,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "0b9e320e76279a438bfa8d708934375844f66fb14c66ca4c1226e2d93ec6669a"
+}
