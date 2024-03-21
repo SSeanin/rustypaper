@@ -24,7 +24,8 @@ struct Configuration {
 async fn main() {
     dotenv().ok();
 
-    let env = envy::from_env::<Configuration>()
+    let env = envy::prefixed("RUSTYPAPER_")
+        .from_env::<Configuration>()
         .expect("failed to read configuration environment variables");
 
     let database = AppDatabase::new(
