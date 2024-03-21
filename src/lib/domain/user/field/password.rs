@@ -1,6 +1,8 @@
 use crate::domain::Result;
-use argon2::password_hash::{rand_core::OsRng, SaltString};
-use argon2::{Argon2, PasswordHash, PasswordHasher, PasswordVerifier};
+use argon2::{
+    password_hash::{rand_core::OsRng, SaltString},
+    Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
+};
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;

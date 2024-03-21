@@ -1,5 +1,4 @@
-use sqlx::postgres::PgPoolOptions;
-use sqlx::Postgres;
+use sqlx::{postgres::PgPoolOptions, Postgres};
 
 pub type AppDatabase = Database<Postgres>;
 pub type DatabasePool = sqlx::postgres::PgPool;
@@ -24,5 +23,11 @@ impl Database<Postgres> {
 
     pub fn get_pool(&self) -> &DatabasePool {
         &self.0
+    }
+}
+
+impl Clone for Database<Postgres> {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
     }
 }

@@ -1,9 +1,11 @@
-use crate::data::database::DatabasePool;
-use crate::data::model::user::dto::{
-    CreateUserDto, GetUserByEmailDto, GetUserByIdDto, UpdateUserDto,
+use crate::data::{
+    database::DatabasePool,
+    model::{
+        user::dto::{CreateUserDto, GetUserByEmailDto, GetUserByIdDto, UpdateUserDto},
+        User,
+    },
+    Result,
 };
-use crate::data::model::User;
-use crate::data::Result;
 use sqlx::{query, query_as};
 
 pub async fn get_user_by_email<D>(get_user_dto: D, database_pool: &DatabasePool) -> Result<User>

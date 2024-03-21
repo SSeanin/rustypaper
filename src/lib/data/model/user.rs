@@ -1,10 +1,10 @@
 pub mod dto;
 
-use crate::data::Id;
-use crate::domain::user::field::{
-    CreatedAt, Email, FirstName, LastName, Password, UpdatedAt, UserId,
+use crate::{
+    data::Id,
+    domain::user::field::{CreatedAt, Email, FirstName, LastName, Password, UpdatedAt, UserId},
+    domain::DomainError,
 };
-use crate::domain::DomainError;
 use sqlx::types::{chrono::DateTime, chrono::Utc, Uuid};
 
 pub struct User {
@@ -17,6 +17,7 @@ pub struct User {
     pub(in crate::data) updated_at: DateTime<Utc>,
 }
 
+// TODO conversions coming from the data layer should not be validated
 impl TryFrom<User> for crate::domain::User {
     type Error = DomainError;
 

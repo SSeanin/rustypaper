@@ -1,8 +1,9 @@
-use crate::data::Id;
-use crate::domain::post::field::Shortcode;
-use crate::domain::AppDatetime;
 use crate::service::object::post::{
     CreatePostObject, DeletePostObject, GetAllPostsObject, GetPostObject, UpdatePostObject,
+};
+use crate::{
+    data::Id,
+    domain::{post::field::Shortcode, AppDatetime},
 };
 use chrono::{DateTime, Utc};
 use uuid::Uuid;

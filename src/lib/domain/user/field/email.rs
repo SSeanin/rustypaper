@@ -1,9 +1,8 @@
 use crate::domain::{DomainError, Result};
 use serde::{Deserialize, Serialize};
-use std::borrow::Cow;
-use std::str::FromStr;
+use std::{borrow::Cow, str::FromStr};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Default)]
 pub struct Email(String);
 
 impl Email {

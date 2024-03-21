@@ -14,20 +14,43 @@ keywords = ["blog", "weblog"]
 name = "rustypaper"
 path = "src/lib/lib.rs"
 
+[[bin]]
+name = "bootstrap"
+path = "src/bin/main.rs"
+
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 thiserror = "1.0"
 rand = "0.8"
-uuid = { version = "0.8", features = ["v4", "serde"] }
+uuid = { version = "1.7", features = ["v4", "serde"] }
 derive_more = "0.99"
 chrono = { version = "0.4", features = ["serde"] }
-sqlx = { version = "0.5", features = ["postgres", "runtime-tokio-rustls", "uuid", "chrono", "macros", "offline"] }
-tokio = "1.17"
-rocket = { version = "0.5.0-rc.1", features = ["json", "secrets"] }
-dotenv = "0.15.0"
-envy = "0.4.2"
-validator = { version = "0.15", features = ["derive"] }
-argon2 = "0.4"
+sqlx = { version = "0.7", features = [
+    "postgres",
+    "runtime-tokio-rustls",
+    "uuid",
+    "chrono",
+    "macros",
+] }
+tokio = { version = "1.36", features = ["macros", "rt-multi-thread"] }
+dotenvy = "0.15"
+envy = "0.4"
+validator = { version = "0.16", features = ["derive"] }
+argon2 = "0.5"
 rand_core = { version = "0.6", features = ["std"] }
-jsonwebtoken = "8"
+jsonwebtoken = "9.2"
+axum = { version = "0.7", features = ["macros"] }
+tracing-subscriber = "0.3"
+tower = "0.4"
+axum-extra = { version = "0.9", features = ["cookie-private"] }
+tower-http = { version = "0.5.2", features = [
+    "cors",
+    "trace",
+    "compression-gzip",
+    "timeout",
+] }
+http = "1.1.0"
+
+[profile.dev.package.sqlx-macros]
+opt-level = 3

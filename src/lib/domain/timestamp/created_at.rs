@@ -2,7 +2,7 @@ use crate::domain::datetime::AppDatetime;
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize, Constructor)]
+#[derive(Debug, Serialize, Deserialize, Constructor, Default)]
 pub struct CreatedAt(AppDatetime);
 
 impl CreatedAt {

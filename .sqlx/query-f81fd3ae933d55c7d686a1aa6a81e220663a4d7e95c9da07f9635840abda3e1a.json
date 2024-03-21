@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE post SET\n                title = COALESCE($1, title),\n                content = COALESCE($2, content),\n                is_published = COALESCE($3, is_published),\n                updated_at = $4\n            WHERE shortcode = $5\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Text",
+        "Bool",
+        "Timestamptz",
+        "Bpchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f81fd3ae933d55c7d686a1aa6a81e220663a4d7e95c9da07f9635840abda3e1a"
+}

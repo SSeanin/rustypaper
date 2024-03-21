@@ -1,5 +1,4 @@
-use crate::data::DataError;
-use crate::domain::DomainError;
+use crate::{data::DataError, domain::DomainError};
 use sqlx::Error::RowNotFound;
 
 pub mod action;
@@ -19,6 +18,8 @@ pub enum ServiceError {
     Validation(validator::ValidationErrors),
     #[error("invalid uuid")]
     InvalidUuid,
+    #[error("invalid token")]
+    InvalidToken,
     #[error("unauthorized")]
     Unauthorized,
 }

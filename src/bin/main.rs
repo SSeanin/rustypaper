@@ -1,7 +1,10 @@
-use dotenv::dotenv;
-use rustypaper::data::database::AppDatabase;
-use rustypaper::domain::TokenGenerator;
-use rustypaper::web::{rocket, RocketConfig};
+use axum_extra::extract::cookie::Key;
+use dotenvy::dotenv;
+use rustypaper::{
+    data::database::AppDatabase,
+    domain::TokenGenerator,
+    web::{server::generate_app, Config},
+};
 use serde::Deserialize;
 
 const API_VERSION: &str = "0";
@@ -14,13 +17,15 @@ struct Configuration {
     database_password: String,
     database_name: String,
     auth_shared_secret_key: String,
+    cookie_key: String,
 }
 
-#[rocket::main]
-async fn main() -> Result<(), rocket::Error> {
+#[tokio::main]
+async fn main() {
     dotenv().ok();
 
-    let env = envy::from_env::<Configuration>()
+    let env = envy::prefixed("RUSTYPAPER_")
+        .from_env::<Configuration>()
         .expect("failed to read configuration environment variables");
 
     let database = AppDatabase::new(
@@ -38,15 +43,16 @@ async fn main() -> Result<(), rocket::Error> {
 
     let token_generator = TokenGenerator::new(env.auth_shared_secret_key);
 
-    let _rocket = rocket(RocketConfig {
+    let cookie_key = Key::try_from(env.cookie_key.as_bytes())
+        .expect("Cookie key is too short. It must be at least 64 bytes");
+
+    let (routes, listener) = generate_app(Config {
         database,
         token_generator,
+        cookie_key,
         api_version: API_VERSION,
     })
-    .ignite()
-    .await?
-    .launch()
-    .await?;
+    .await;
 
-    Ok(())
+    axum::serve(listener, routes).await.unwrap();
 }

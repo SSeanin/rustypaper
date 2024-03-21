@@ -1,8 +1,11 @@
-use crate::data::database::DatabasePool;
-use crate::data::query::user::get_user_by_email;
-use crate::domain::{DomainError, TokenGenerator, TokenPair, User};
-use crate::service::object::auth::{LoginObject, RefreshObject};
-use crate::service::{Result, ServiceError};
+use crate::{
+    data::{database::DatabasePool, query::user::get_user_by_email},
+    domain::{TokenGenerator, TokenPair, User},
+    service::{
+        object::auth::{LoginObject, RefreshObject},
+        Result, ServiceError,
+    },
+};
 
 pub async fn login_action<O>(
     login_object: O,
@@ -38,6 +41,6 @@ where
         // todo persist refresh token family
         Ok(token_generator.generate_token_pair(object.access_token_claims.sub.as_str())?)
     } else {
-        Err(ServiceError::Domain(DomainError::InvalidToken))
+        Err(ServiceError::InvalidToken)
     }
 }

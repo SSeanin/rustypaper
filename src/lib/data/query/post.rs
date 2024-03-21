@@ -1,9 +1,11 @@
-use crate::data::database::DatabasePool;
-use crate::data::model::post::dto::{
-    CreatePostDto, DeletePostDto, GetAllPostsDto, GetPostDto, UpdatePostDto,
+use crate::data::{
+    database::DatabasePool,
+    model::{
+        post::dto::{CreatePostDto, DeletePostDto, GetAllPostsDto, GetPostDto, UpdatePostDto},
+        Post,
+    },
+    Result,
 };
-use crate::data::model::Post;
-use crate::data::Result;
 use sqlx::{query, query_as};
 
 pub async fn get_all_posts<D>(
@@ -18,7 +20,19 @@ where
     Ok(query_as!(
         Post,
         r#"
-            SELECT * FROM post LIMIT $1 OFFSET $2
+            SELECT
+                post_id,
+                title,
+                LEFT(content, 450) as content,
+                shortcode,
+                author_id,
+                is_published,
+                post.created_at,
+                post.updated_at,
+                user_id,
+                first_name as user_first_name,
+                last_name as user_last_name
+            FROM post INNER JOIN "user" ON post.author_id = "user".user_id ORDER BY post.created_at DESC LIMIT $1 OFFSET $2
         "#,
         get_all_posts_dto.limit,
         get_all_posts_dto.skip
@@ -35,7 +49,19 @@ where
     Ok(query_as!(
         Post,
         r#"
-            SELECT * FROM post WHERE shortcode = $1
+            SELECT
+                post_id,
+                title,
+                content,
+                shortcode,
+                author_id,
+                is_published,
+                post.created_at,
+                post.updated_at,
+                user_id,
+                first_name as user_first_name,
+                last_name as user_last_name
+            FROM post JOIN "user" ON post.author_id = "user".user_id AND shortcode = $1;
         "#,
         shortcode
     )

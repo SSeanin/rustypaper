@@ -24,8 +24,6 @@ pub enum DomainError {
     Token(#[from] jsonwebtoken::errors::Error),
     #[error("invalid password")]
     InvalidPassword,
-    #[error("invalid token")]
-    InvalidToken,
     #[error("token generator access failed")]
     TokenGenerator,
     #[error("database access failed")]
