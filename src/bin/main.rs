@@ -28,7 +28,7 @@ async fn main() {
 
     let env = envy::prefixed("RUSTYPAPER_")
         .from_env::<Configuration>()
-        .expect("failed to read configuration environment variables");
+        .expect("to read configuration environment variables");
 
     let database = AppDatabase::new(
         format!(
@@ -46,7 +46,7 @@ async fn main() {
     let token_generator = TokenGenerator::new(env.auth_shared_secret_key);
 
     let cookie_key = Key::try_from(env.cookie_key.as_bytes())
-        .expect("Cookie key is too short. It must be at least 64 bytes");
+        .expect("cookie key to be at lease 64 bytes");
 
     let (routes, listener) = generate_app(Config {
         database,
