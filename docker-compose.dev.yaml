@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:15.1
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    volumes:
+      - backend-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${RUSTYPAPER_DATABASE_PASSWORD}
+      POSTGRES_USER: ${RUSTYPAPER_DATABASE_USER}
+      POSTGRES_DB: ${RUSTYPAPER_DATABASE_NAME}
+      PGDATA: /var/lib/postgresql/data
+    networks:
+      - backend
+
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    volumes:
+      - .:/urs/src/app
+    depends_on:
+      - db
+    env_file:
+      - ".env"
+    environment:
+      RUSTYPAPER_DATABASE_HOST: db
+      DATABASE_URL: postgres://${RUSTYPAPER_DATABASE_USER}:${RUSTYPAPER_DATABASE_PASSWORD}@db:5432/${RUSTYPAPER_DATABASE_NAME}
+    networks:
+      - backend
+
+
+volumes:
+  backend-db: {}
+
+networks:
+  backend: {}

@@ -59,7 +59,7 @@ pub async fn generate_app(config: Config) -> (Router, TcpListener) {
                 .layer(TimeoutLayer::new(Duration::new(60, 0))),
         );
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000")
         .await
         .unwrap();
 
