@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use axum_extra::extract::cookie::Key;
 use dotenvy::dotenv;
 use rustypaper::{
@@ -54,5 +56,12 @@ async fn main() {
     })
     .await;
 
-    axum::serve(listener, routes).await.unwrap();
+    println!(
+        "Up and running on {:?}",
+        listener.local_addr().expect("to have a running address")
+    );
+
+    axum::serve(listener, routes)
+        .await
+        .expect("to have started");
 }
