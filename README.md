@@ -7,7 +7,7 @@ The Rusty Paper
 </h1>
 
 <p align="center">
-    A straight forward RESTful API for creating and sharing text content that you can host yourself, in Rust.
+    A ready out of the box RESTful API for creating and sharing text content that you can host yourself, in Rust.
 </p>
 
 ## Table of Content
