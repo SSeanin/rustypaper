@@ -61,7 +61,8 @@ impl TokenGenerator {
         let access_token = encode(
             &Header::new(Algorithm::HS512),
             &access_token_claims,
-            &EncodingKey::from_base64_secret(self.secret.as_ref()),
+            &EncodingKey::from_base64_secret(self.secret.as_ref())
+                .expect("encoding key to be base64 encoded"),
         )?;
 
         let refresh_token_claims = RefreshTokenClaims {
@@ -74,7 +75,8 @@ impl TokenGenerator {
         let refresh_token = encode(
             &Header::new(Algorithm::HS512),
             &refresh_token_claims,
-            &EncodingKey::from_base64_secret(self.secret.as_ref()),
+            &EncodingKey::from_base64_secret(self.secret.as_ref())
+                .expect("encoding key to be base64 encoded"),
         )?;
 
         Ok(TokenPair {
