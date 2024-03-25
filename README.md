@@ -12,8 +12,8 @@ The Rusty Paper
 
 ## Table of Content
 - [Development Run](#development-run)
-    - [Running Using Docker Compose](#running-using-docker-compose)
-    - [Running Locally Using Cargo and SQLx CLI](#running-locally-using-cargo-and-sqlx-cli)
+    - [Run Using Docker Compose](#run-using-docker-compose)
+    - [Run Using Cargo and SQLx CLI](#run-using-cargo-and-sqlx-cli)
 - [Production Run](#production-run)
 - [Configuration](#configuration)
     - [`_FILE` Format](#_file-format)
@@ -24,7 +24,11 @@ You can either run the application locally in a docker container or run it using
 ### Run Using Docker Compose
 If you have Docker and [Docker Compose](https://docs.docker.com/compose/) installed, the process for a development run is straight forward.
 
-Simply rename the `.env.example` file to `.env` and fill in the [environment variables](#configuration).
+Simply rename the `.env.example` file to `.env` and fill in the [environment variables](#configuration), then do
+
+```bash
+docker compose -f docker-compose.dev.yaml up --detach
+```
 
 Docker Compose uses the database related configuration that you provide in `.env` to create a PostgreSQL instance. The application container then tries to connect to the database and set it up automatically.
 
