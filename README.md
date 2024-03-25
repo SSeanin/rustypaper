@@ -12,8 +12,8 @@ The Rusty Paper
 
 ## Table of Content
 - [Development Run](#development-run)
-    - [Running Using Docker Compose](#run-using-docker-compose)
-    - [Running Locally Using Cargo and SQLx CLI](#run-using-cargo-and-sqlx-cli)
+    - [Run Using Docker Compose](#run-using-docker-compose)
+    - [Run Using Cargo and SQLx CLI](#run-using-cargo-and-sqlx-cli)
 - [Production Run](#production-run)
 - [Configuration](#configuration)
     - [`_FILE` Format](#_file-format)
