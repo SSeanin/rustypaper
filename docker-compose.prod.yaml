@@ -1,0 +1,94 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:15
+
+    volumes:
+      - backend-db-prod:/var/lib/postgresql/data
+
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_USER_FILE: /run/secrets/postgres_user
+      POSTGRES_DB: rustypaper
+      PGDATA: /var/lib/postgresql/data
+
+    networks:
+      - backend-prod
+
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 60s
+
+    secrets:
+      - postgres_password
+      - postgres_user
+
+
+  backend:
+    image: saeedandalib/rustypaper
+
+    ports:
+      - "3000:3000"
+
+    volumes:
+      - .:/urs/src/app
+    
+    depends_on:
+      - db
+
+    environment:
+      RUSTYPAPER_DATABASE_HOST: db
+      RUSTYPAPER_DATABASE_PORT: 5432
+      RUSTYPAPER_DATABASE_NAME: rustypaper
+      RUSTYPAPER_DATABASE_USER_FILE: /run/secrets/rustypaper_database_user
+      RUSTYPAPER_DATABASE_PASSWORD_FILE: /run/secrets/rustypaper_database_password
+      RUSTYPAPER_AUTH_SHARED_SECRET_KEY_FILE: /run/secrets/rustypaper_auth_shared_secret_key
+      RUSTYPAPER_COOKIE_KEY_FILE: /run/secrets/rustypaper_cookie_key
+
+    networks:
+      - backend-prod
+
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
+
+    secrets:
+      - rustypaper_database_user
+      - rustypaper_database_password
+      - rustypaper_auth_shared_secret_key
+      - rustypaper_cookie_key
+
+
+volumes:
+  backend-db-prod: {}
+
+networks:
+  backend-prod: {}
+
+secrets:
+  postgres_password:
+    external: true
+
+  postgres_user:
+    external: true
+
+  rustypaper_database_user:
+    external: true
+
+  rustypaper_database_password:
+    external: true
+
+  rustypaper_auth_shared_secret_key:
+    external: true
+
+  rustypaper_cookie_key:
+    external: true

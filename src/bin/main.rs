@@ -69,13 +69,15 @@ async fn main() {
         },
     );
 
-    let cookie_key = Key::try_from(if let Some(path) = env.cookie_key_file {
-        read_secret_file_in(path).as_bytes()
-    } else {
-        env.cookie_key
-            .expect("RUSTYPAPER_COOKIE_KEY_FILE or RUSTYPAPER_COOKIE_KEY to be available")
-            .as_bytes()
-    })
+    let cookie_key = Key::try_from(
+        (if let Some(path) = env.cookie_key_file {
+            read_secret_file_in(path)
+        } else {
+            env.cookie_key
+                .expect("RUSTYPAPER_COOKIE_KEY_FILE or RUSTYPAPER_COOKIE_KEY to be available")
+        })
+        .as_bytes(),
+    )
     .expect("cookie key to be at lease 64 bytes");
 
     let (routes, listener) = generate_app(Config {

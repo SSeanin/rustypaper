@@ -93,7 +93,8 @@ impl TokenGenerator {
 
         Ok(decode::<C>(
             token,
-            &DecodingKey::from_secret(self.secret.as_ref()),
+            &DecodingKey::from_base64_secret(self.secret.as_ref())
+                .expect("decoding key to be base64 encoded"),
             &validation,
         )?
         .claims)

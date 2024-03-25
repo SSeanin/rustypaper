@@ -43,11 +43,11 @@ FROM debian:bullseye-slim AS runtime
 WORKDIR /usr/src/app
 
 COPY --from=builder /usr/local/cargo/bin/sqlx /usr/local/cargo/bin/sqlx
-COPY --from=builder /usr/src/app/target/release/bootstrap axum-backend
+COPY --from=builder /usr/src/app/target/release/bootstrap app
 
 ENV CARGO_HOME=/usr/local/cargo
-COPY db-setup.sh db-setup.sh
+COPY docker-entrypoint.sh docker-entrypoint.sh
 COPY migrations migrations
-RUN chmod +x db-setup.sh
+RUN chmod +x docker-entrypoint.sh
 
-ENTRYPOINT [ "sh", "-c", "./db-setup.sh && ./axum-backend" ]
+ENTRYPOINT [ "./docker-entrypoint.sh", "./app" ]
