@@ -32,9 +32,6 @@ services:
   backend:
     image: saeedandalib/rustypaper
 
-    ports:
-      - "3000:3000"
-
     volumes:
       - .:/urs/src/app
     
@@ -52,6 +49,7 @@ services:
 
     networks:
       - backend-prod
+      - nginx
 
     deploy:
       replicas: 3
@@ -73,6 +71,8 @@ volumes:
 
 networks:
   backend-prod: {}
+  nginx:
+    external: true
 
 secrets:
   postgres_password:
